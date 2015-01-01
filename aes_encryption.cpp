@@ -1,92 +1,113 @@
-//The encryption program
-//Final revision
+// Program refactor
 
-#include <iostream>																										//Used to prompt the user to input values and to display text
-#include <fstream>																										//For the reading of the text file and outputting the cipher text
-#include <string>																										//Used to open files by name
+#include <iostream>
+#include <fstream>
+#include <string>
 
-void main_menu			();																								//Forward declarations for all of the functions
-void test				();
-void encrypt_file		(bool output_key);
-void add_round_key		(unsigned char state[4][4], 	unsigned char round_key[4][44], int &count);
-void write_to_array		(std::ifstream &infile, 		unsigned char state[4][4]);
-void s_box_k			(unsigned char state[4], 		const unsigned char s[16][16]);
-void s_box				(unsigned char state[4][4], 	const unsigned char s[16][16]);
-void rot_word			(unsigned char round_key[4][44],unsigned char rot_word[4], int &count);
-void write_to_file		(unsigned char state[4][4], 	std::ofstream &outfile);
-void row_shift			(unsigned char state[4][4]);
-void mix_columns		(unsigned char state[4][4]);
-void cipher				(unsigned char cipher_key[4][4]);
-void encrypt_state		(int &count,
-						 const unsigned char s[16][16],
-						 unsigned char round_key[4][44],
-						 unsigned char state[4][4]);
-void open_file			(std::ifstream &infile,
-						 std::ofstream &outfile,
-						 bool output_key,
-						 std::ofstream &outkey,
-						 unsigned char cipher_key[4][4]);
-void key_schedule		(unsigned char cipher_key[4][4],
-						 unsigned char round_key[4][44],
-						 unsigned char a_rot_word[4],
-						 const unsigned char s[16][16],
-						 int &count);
+void main_menu();
 
-void main_menu			()																								//Presents options for the user
+void test();
+
+void encrypt_file(bool output_key);
+
+void add_round_key(unsigned char state[4][4],
+                   unsigned char round_key[4][44],
+                   int &count);
+
+void write_to_array(std::ifstream &infile,
+                    unsigned char state[4][4]);
+
+void s_box_k(unsigned char state[4],
+             const unsigned char s[16][16]);
+
+void s_box(unsigned char state[4][4],
+           const unsigned char s[16][16]);
+
+void rot_word(unsigned char round_key[4][44],
+              unsigned char rot_word[4],
+              int &count);
+
+void write_to_file(unsigned char state[4][4],
+                   std::ofstream &outfile);
+
+void row_shift(unsigned char state[4][4]);
+
+void mix_columns(unsigned char state[4][4]);
+
+void cipher(unsigned char cipher_key[4][4]);
+
+void encrypt_state(int &count,
+                   const unsigned char s[16][16],
+                   unsigned char round_key[4][44],
+                   unsigned char state[4][4]);
+
+void open_file(std::ifstream &infile,
+               std::ofstream &outfile,
+               bool output_key,
+               std::ofstream &outkey,
+               unsigned char cipher_key[4][4]);
+
+void key_schedule(unsigned char cipher_key[4][4],
+				  unsigned char round_key[4][44],
+				  unsigned char a_rot_word[4],
+				  const unsigned char s[16][16],
+				  int &count);
+
+void main_menu()
 {
-	int choice;																											//Used to choose what option in the menu the user wants to use
+	std::cout << "\n***** AES 128 Bit Encryption Program *****\n\n"
+                 "[1] Encrypt .txt file, no key output.\n"
+                 "[2] Encrypt .txt file, outputs key to .txt file.\n"
+                 "[3] Test Run.\n"
+                 "[4] Description of options.\n"
+                 "[ANY OTHER KEY] Quit the program\n\n"
+			     "Enter your choice: ";
 
-	std::cout << "\n***** AES 128 Bit Encryption Program *****\n\n";													//Menu interface
-	std::cout << "[1] Encrypt .txt file, no key output.\n"
-			  << "[2] Encrypt .txt file, outputs key to .txt file.\n"
-			  << "[3] Test Run.\n"
-			  << "[4] Description of options.\n"
-			  << "[ANY OTHER KEY] Quit the program\n\n"
-			  << "Enter your choice: ";
+    int choice;
+	std::cin >> choice;
 
-	std::cin >> choice;																									//Prompt for the user's choice
+    //For whether the user wants the cipher key to be output to a file
+	auto output_key = false;
 
-	bool output_key = false;																							//Variable to say if the user wants the cipher key to be output to a file
-
-
-	switch(choice)																										//Runs main_menu
+	switch(choice)
 	{
-		case 1:																											//If one is outputted the encryption program runs
-			encrypt_file(output_key);																					//Performs AES 128 Bit Encryption
+		case 1:
+			encrypt_file(output_key);
 			break;
-		case 2:																											//Runs AES 128 Bit but outputs the cipher key to a text file
+		case 2:
 			output_key = true;
 			encrypt_file(output_key);
 			break;
 		case 3:
-			test();																										//Runs the test function
-			main_menu();																								//Returns to the main menu
+			test();
+			main_menu();
 			break;
-		case 4:																											//Displays text to explain what the program does
-			std::cout << "\n[1]: Encodes a .txt file in 128 Bit AES."
-					  << "\n[1]: User is asked to enter the name of the input and output files."
-					  << "\n[1]: The program automatically adds the .txt extension."
-				      << "\n\n[2]: Same as [1] but outputs the key used in a .txt file for the user in the same directory."
-					  << "\n\n[3]: Test Run: Encrypts a preset 4x4 array and outputs the results."
-					  << "\n\nState is:" 	  << "\t\tThe cipher key is:" << "\tThe results should be:"
-					  << "\n[32, 88, 31, e0]" << "\t[2b, 28, ab, 09]"     << "\t[39, 02, dc, 19]"
-					  << "\n[43, 5a, 31, 37]" << "\t[7e, ae, f7, cf]"     << "\t[25, dc, 11, 6a]"
-					  << "\n[f6, 30, 98, 07]" << "\t[15, d2, 15, 4f]"     << "\t[84, 09, 85, 0b]"
-					  << "\n[a8, 8d, a2, 34]" << "\t[16, a6, 88, 3c]"     << "\t[1d, fb, 97, 32]"
-					   << "\n\nValues and expected results sourced from the following website:"
-					  << "\nhttp://www.cs.bc.edu/~straubin/cs381-05/blockciphers/rijndael_ingles2004.swf"
-					  << "\n\nIt proves that this program works correctly.\n";
-					  main_menu();																						//Returns to the main menu
-					  break;
+		case 4:
+			std::cout << "\n[1]: Encodes a .txt file in 128 Bit AES.\n"
+					     "[1]: User is asked to enter the name of the input and output files.\n"
+					     "[1]: The program automatically adds the .txt extension.\n\n"
+                         "[2]: Same as [1] but outputs the key used in a .txt file for the user in the same directory.\n\n"
+                         "[3]: Test Run: Encrypts a preset 4x4 array and outputs the results.\n\n"
+                         "State is:" 	      << "\t\tThe cipher key is:" << "\tThe results should be:\n"
+                         "[32, 88, 31, e0]" << "\t[2b, 28, ab, 09]"     << "\t[39, 02, dc, 19]\n"
+                         "[43, 5a, 31, 37]" << "\t[7e, ae, f7, cf]"     << "\t[25, dc, 11, 6a]\n"
+                         "[f6, 30, 98, 07]" << "\t[15, d2, 15, 4f]"     << "\t[84, 09, 85, 0b]\n"
+                         "[a8, 8d, a2, 34]" << "\t[16, a6, 88, 3c]"     << "\t[1d, fb, 97, 32]\n\n"
+                         "Values and expected results sourced from the following website:"
+                         "http://www.cs.bc.edu/~straubin/cs381-05/blockciphers/rijndael_ingles2004.swf\n\n"
+                         "It proves that this program works correctly.\n";
+            main_menu();
+            break;
 		default:
-			std::cout << "\nClosing program...";																		//Does nothing, ends the program
+			std::cout << "\nClosing program...";
 	}
 }
 
 
-void test				()																								//Test function to show the program works
+void test()
 {
-	const unsigned char s[16][16] = 																					//S box look up table
+    //S box look up table
+	const unsigned char s[16][16] =
 	{
 	   0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
 	   0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -106,90 +127,96 @@ void test				()																								//Test function to show the program works
 	   0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
 	};
 
-	unsigned char cipher_key[4][4] = {																					//Array to hold the cipher key
-										{0x2b, 0x28, 0xab, 0x09},
-										{0x7e, 0xae, 0xf7, 0xcf},
-										{0x15, 0xd2, 0x15, 0x4f},
-										{0x16, 0xa6, 0x88, 0x3c}
-									};
+	unsigned char cipher_key[4][4] = {
+		{0x2b, 0x28, 0xab, 0x09},
+		{0x7e, 0xae, 0xf7, 0xcf},
+		{0x15, 0xd2, 0x15, 0x4f},
+		{0x16, 0xa6, 0x88, 0x3c}
+    };
 
-	unsigned char state[4][4] = {																						//The array for state
-									{0x32, 0x88, 0x31, 0xe0},
-									{0x43, 0x5a, 0x31, 0x37},
-									{0xf6, 0x30, 0x98, 0x07},
-									{0xa8, 0x8d, 0xa2, 0x34}
-								};
+	unsigned char state[4][4] = {
+	    {0x32, 0x88, 0x31, 0xe0},
+		{0x43, 0x5a, 0x31, 0x37},
+		{0xf6, 0x30, 0x98, 0x07},
+		{0xa8, 0x8d, 0xa2, 0x34}
+    };
 
 	static int count = 0;
-	unsigned char round_key[4][44];																						//Array to hold all permutations of the round key
-	unsigned char a_rot_word[4];																						//Array to hold the rotated column used in the key schedule
 
-	key_schedule(cipher_key, round_key, a_rot_word, s, count);															//Expands the entire round key
-	encrypt_state(count, s, round_key, state);																			//Resets count for the next loop
+	//Array to hold all permutations of the round key
+	unsigned char round_key[4][44];
+
+	//Array to hold the rotated column used in the key schedule
+	unsigned char a_rot_word[4];
+
+    //Expands the entire round key
+	key_schedule(cipher_key, round_key, a_rot_word, s, count);
+
+	//Resets count for the next loop
+	encrypt_state(count, s, round_key, state);
 
 	std::cout << "\nThe results are:\n";
 
-	for(int i = 0; i < 4; i++)																							//Outputs state after encryption to show function works
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
 			std::cout << std::hex << static_cast<int>(state[i][j]) << "\t";
 		}
-
 		std::cout << std::endl;
 	}
 }
 
-void open_file			(std::ifstream &infile,																			//Opens input and output text files
-						 std::ofstream &outfile,
-						 bool output_key,
-						 std::ofstream &outkey,
-						 unsigned char cipher_key[4][4])
+void open_file(std::ifstream &infile,
+               std::ofstream &outfile,
+               bool output_key,
+               std::ofstream &outkey,
+               unsigned char cipher_key[4][4])
 {
-	std::string file_name;																								//String to hold file name
-	std::string key_name;																								//String to hold key file name
-	char character;																										//To hold character read from file
+	std::string file_name;
+	std::string key_name;
+	char character;
 
 	bool read_success = false;
 
 	while(read_success == false)
 	{
-		std::cout << "\n\nEnter the name of a file to be read: ";														//Prompt to get file name
+		std::cout << "\n\nEnter the name of a file to be read: ";
 		std::cin >> file_name;
 
-		file_name = (file_name + ".txt");																				//Adds .txt extension so file can be read
+		file_name = (file_name + ".txt");
 
-		infile.open(file_name.c_str());																					//Opens file
+		infile.open(file_name.c_str());
 
-		if (infile.is_open())																							//Checks if file is open
+		if (infile.is_open())
 		{
 			std::cout << "\n***The file has been opened.***\n\n";
 			read_success = true;
 		}
-		else																											//Outputs if file is not vaild
+		else
 		{
 			std::cout << "\nThat is not a valid file name.\n\n";
 		}
 	}
 
 
-	std::cout << "Enter the name of a file to be written to (if it already exists it will be overwritten): ";			//Prompt to get file name for output of cipher text
+	std::cout << "Enter the name of a file to be written to (if it already exists it will be overwritten): ";
 	std::cin >> file_name;
 
-	key_name  = (file_name + "_key" + ".txt");																			//Makes file name for key output
-	file_name = (file_name + ".txt");																					//Adds .txt extension so file can be read
+	key_name  = (file_name + "_key" + ".txt");
+	file_name = (file_name + ".txt");
 
-	outfile.open(file_name.c_str());																					//Opens file for output
+	outfile.open(file_name.c_str());
 
 	if(output_key == true)
 	{
-		outkey.open(key_name.c_str());																					//Opens file for output
+		outkey.open(key_name.c_str());
 
 		for(int i = 0; i < 4; i++)
 		{
 			for(int j = 0; j < 4; j++)
 			{
-				outkey << cipher_key[j][i];																				//Writes key to file
+				outkey << cipher_key[j][i];
 			}
 		}
 
@@ -197,35 +224,40 @@ void open_file			(std::ifstream &infile,																			//Opens input and out
 	}
 }
 
-void write_to_array		(std::ifstream &infile, 		unsigned char state[4][4])										//Reads 16 characters from text file, writes to state array
+//Reads 16 characters from text file, writes to state array
+void write_to_array(std::ifstream &infile, unsigned char state[4][4])
 {
 
-	for(int i = 0; i < 4; i++)																							//Loop to go through all values of the state array
+	for(int i = 0; i < 4; i++)
 	{
 		for( int j = 0; j < 4; j++)
 		{
-			state[j][i] = infile.get();																					//Reads a character from file, writes to the array
+			state[j][i] = infile.get();
 
 		}
 	}
 }
 
-void key_schedule		(unsigned char cipher_key[4][4],																//Implements the key schedule and expands the whole round key
-						 unsigned char round_key[4][44],
-					     unsigned char a_rot_word[4],
-						 const unsigned char s[16][16],
-						 int &count)
+//Implements the key schedule and expands the whole round key
+void key_schedule(unsigned char cipher_key[4][4],
+				  unsigned char round_key[4][44],
+				  unsigned char a_rot_word[4],
+				  const unsigned char s[16][16],
+				  int &count)
 {
-	unsigned char temp[4];																								//Used to hold the next generated column of the round key
+    //Used to hold the next generated column of the round key
+	unsigned char temp[4];
 
-	const unsigned char r_con[4][10] = {																				//Array holding the relevant values of the r_con for 128 bit AES
-									{0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36},
-									{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-									{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-									{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-								};
+    //Array holding the relevant values of the r_con for 128 bit AES
+	const unsigned char r_con[4][10] = {
+	    {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36},
+		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+    };
 
-	for(int i = 0; i < 4; i++)																							//Makes the first 4 columns of the round key the same as the cipher key
+    //Makes the first 4 columns of the round key the same as the cipher key
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
@@ -233,133 +265,172 @@ void key_schedule		(unsigned char cipher_key[4][4],																//Implements 
 		}
 	}
 
-	for(int i = 4; i < 44; i++)																							//Loop goes through all columns of the round key, starts at 4 to ignore the cipher values
+    //Loop goes through all columns of the round key, starts at 4 to ignore the cipher values
+	for(int i = 4; i < 44; i++)
 	{
 
-		if(i % 4 == 0)																									//Checks if the current value is a multiple of 4
+		if(i % 4 == 0)
 		{
 
-			rot_word(round_key, a_rot_word, count);																		//Rotates the column by 1 byte
-			s_box_k(a_rot_word, s);																						//Performs the s box on it
+			rot_word(round_key, a_rot_word, count);
 
-			for(int j = 0; j < 4; j++)																					//XORs rotated column with column 4 places before in round key with part of the r_con
+            //Performs the s box on it
+			s_box_k(a_rot_word, s);
+
+            //XORs rotated column with column 4 places before in round key with part of the r_con
+			for(int j = 0; j < 4; j++)
 			{
-				temp[j] = ( round_key[j][i-4] ^ a_rot_word[j] ^ r_con[j][(i/4)-1] );
+				temp[j] = (round_key[j][i - 4] ^ a_rot_word[j] ^ r_con[j][(i / 4) - 1]);
 			}
 
-			for(int j = 0; j < 4; j++)																					//Assigns the XOR'd column to the round key
+            //Assigns the XOR'd column to the round key
+			for(int j = 0; j < 4; j++)
 			{
 				round_key[j][i] = temp[j];
 			}
 		}
 
-		else																											//Checks if the value of the round key is not divisible evenly by 4
+        //Checks if the value of the round key is not divisible evenly by 4
+		else
 		{
 			for(int j = 0; j < 4; j++)
 			{
-				round_key[j][i] = round_key[j][i - 4] ^ round_key[j][i - 1];											//XORs the round key 4 places back with the round key from 1 place back
+			    //XORs the round key 4 places back with the round key from 1 place back
+				round_key[j][i] = round_key[j][i - 4] ^ round_key[j][i - 1];
 			}
 		}
 	}
 
-	count = 0;																											//Resets count to 0 to be used in encryption function
+	count = 0;
 }
 
-void s_box_k			(unsigned char a_rot_word[4],	const unsigned char s[16][16])									//S Box function to be used with the round key expansion
+//S Box function to be used with the round key expansion
+void s_box_k(unsigned char a_rot_word[4], const unsigned char s[16][16])
 {
 
-	for(int i = 0; i < 4; i++)																							//Loops through entire column of state array
+	for(int i = 0; i < 4; i++)
 	{
-		unsigned char 	n = a_rot_word[i];																				//Character to hold a character from the array
-		unsigned char	t = 0xF & n;																					//n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
-		n = n >> 4;																										//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
+	    //Character to hold a character from the array
+		unsigned char n = a_rot_word[i];
 
-		a_rot_word[i] = s[n][t];																								//The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
+        //n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
+		unsigned char t = 0xF & n;
+
+		//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
+		n = n >> 4;
+
+        //The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
+		a_rot_word[i] = s[n][t];
 	}
 }
 
-void s_box				(unsigned char state[4][4], 	const unsigned char s[16][16])									//S box function to be used in the encryption loop
+//S box function to be used in the encryption loop
+void s_box(unsigned char state[4][4],
+           const unsigned char s[16][16])
 {
 	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			unsigned char n = state[i][j];																				//Character to hold a character from the array
-			char t = 0xF & n;																							//n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
+		    //Character to hold a character from the array
+			unsigned char n = state[i][j];
+
+            //n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
+			char t = 0xF & n;
 			n = n >> 4;																									//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
 
-			state[i][j] = s[n][t];																						//The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
+            //The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
+			state[i][j] = s[n][t];
 		}
 	}
 }
 
-void rot_word			(unsigned char round_key[4][44],unsigned char rot_word[4], int &count)							//Used in key expansion, rotates a column by 1 byte "upwards"
+//Used in key expansion, rotates a column by 1 byte "upwards"
+void rot_word(unsigned char round_key[4][44],
+              unsigned char rot_word[4],
+              int &count)
 {
-	unsigned char temp;																									//Holds the first value in the array so it can be put in the last value at the end
+    //Holds the first value in the array so it can be put in the last value at the end
+	unsigned char temp;
 
-	temp = round_key[0][3+count];																						//Temp stores first value of the column in round key
+    //Temp stores first value of the column in round key
+	temp = round_key[0][3+count];
 
-	rot_word[0] = round_key[1][3+count];																				//Assigns the second value of the round key to the first in the rot_word array
-	rot_word[1] = round_key[2][3+count];																				//Assigns the third value of the round key to the first in the rot_word array
-	rot_word[2] = round_key[3][3+count];																				//Assigns the second value of the round key to the first in the rot_word array
-	rot_word[3] = temp;																									//Assigned the temp variable to the fourth part of the rot_word array
+	rot_word[0] = round_key[1][3+count];
+	rot_word[1] = round_key[2][3+count];
+	rot_word[2] = round_key[3][3+count];
+	rot_word[3] = temp;
 
-	count+=4;
+	count += 4;
 }
 
-void add_round_key		(unsigned char state[4][4], 	unsigned char round_key[4][44], int &count)						//XORs the round key with state
+//XORs the round key with state
+void add_round_key(unsigned char state[4][4],
+                   unsigned char round_key[4][44],
+                   int &count)
 {
-	for(int i = 0; i < 4; i++)																							//Loops though all parts of an array
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			state[i][j] = (state[i][j] ^ round_key[i][j + count]);														//XORs state with the currently used part of the round key
+		    //XORs state with the currently used part of the round key
+			state[i][j] = (state[i][j] ^ round_key[i][j + count]);
 		}
 	}
 
-	count+=4;																											//Increases the value for count
+	count += 4;
 }
 
-void row_shift			(unsigned char state[4][4])																		//Shifts the values of the state array
+//Shifts the values of the state array
+void row_shift(unsigned char state[4][4])
 {
-	unsigned char blank[4];																								//Array to hold template
+    //Array to hold template
+	unsigned char blank[4];
 
-	for(int i = 0; i < 4; i++)																							//Copy a template of a row into an array
+    //Copy a template of a row into an array
+	for(int i = 0; i < 4; i++)
 	{
 		blank[i] = state[1][i];
 	}
 
-	state[1][0] = blank[1];																								//Shifts values in row 1, 1 byte over
+    //Shifts values in row 1, 1 byte over
+	state[1][0] = blank[1];
 	state[1][1] = blank[2];
 	state[1][2] = blank[3];
 	state[1][3] = blank[0];
 
-	for(int i = 0; i < 4; i++)																							//Copy a template of a row into an array
+    //Copy a template of a row into an array
+	for(int i = 0; i < 4; i++)
 	{
 		blank[i] = state[2][i];
 	}
 
-	state[2][0] = blank[2];																								//Shifts values in row 2, 2 bytes over
+    //Shifts values in row 2, 2 bytes over
+	state[2][0] = blank[2];
 	state[2][1] = blank[3];
 	state[2][2] = blank[0];
 	state[2][3] = blank[1];
 
-	for(int i = 0; i < 4; i++)																							//Copy a template of a row into an array
+    //Copy a template of a row into an array
+	for(int i = 0; i < 4; i++)
 	{
 		blank[i] = state[3][i];
 	}
 
-	state[3][0] = blank[3];																								//Shifts values in row 3, 3 bytes over
+    //Shifts values in row 3, 3 bytes over
+	state[3][0] = blank[3];
 	state[3][1] = blank[0];
 	state[3][2] = blank[1];
 	state[3][3] = blank[2];
 }
-
-void mix_columns		(unsigned char state[4][4])																		//Implements mix columns function
+//Implements mix columns function
+void mix_columns(unsigned char state[4][4])
 {
-	unsigned char output[4][4];																							//4x4 array for holding result of mix colmns function
+    //4x4 array for holding result of mix colmns function
+	unsigned char output[4][4];
 
-	const unsigned char table_2[256] =   {0x00,0x02,0x04,0x06,0x08,0x0a,0x0c,0x0e,0x10,0x12,0x14,0x16,0x18,0x1a,0x1c,0x1e,	//Lookup table for doing the "multiply by 02" calculation
+    //Lookup table for doing the "multiply by 02" calculation
+	const unsigned char table_2[256] =   {0x00,0x02,0x04,0x06,0x08,0x0a,0x0c,0x0e,0x10,0x12,0x14,0x16,0x18,0x1a,0x1c,0x1e,
 										0x20,0x22,0x24,0x26,0x28,0x2a,0x2c,0x2e,0x30,0x32,0x34,0x36,0x38,0x3a,0x3c,0x3e,
 										0x40,0x42,0x44,0x46,0x48,0x4a,0x4c,0x4e,0x50,0x52,0x54,0x56,0x58,0x5a,0x5c,0x5e,
 										0x60,0x62,0x64,0x66,0x68,0x6a,0x6c,0x6e,0x70,0x72,0x74,0x76,0x78,0x7a,0x7c,0x7e,
@@ -376,7 +447,8 @@ void mix_columns		(unsigned char state[4][4])																		//Implements mix 
 										0xdb,0xd9,0xdf,0xdd,0xd3,0xd1,0xd7,0xd5,0xcb,0xc9,0xcf,0xcd,0xc3,0xc1,0xc7,0xc5,
 										0xfb,0xf9,0xff,0xfd,0xf3,0xf1,0xf7,0xf5,0xeb,0xe9,0xef,0xed,0xe3,0xe1,0xe7,0xe5};
 
-	const unsigned char table_3[256] =	{0x00,0x03,0x06,0x05,0x0c,0x0f,0x0a,0x09,0x18,0x1b,0x1e,0x1d,0x14,0x17,0x12,0x11, //Lookup table for doing the "multiply by 03" calculation
+    //Lookup table for doing the "multiply by 03" calculation
+	const unsigned char table_3[256] =	{0x00,0x03,0x06,0x05,0x0c,0x0f,0x0a,0x09,0x18,0x1b,0x1e,0x1d,0x14,0x17,0x12,0x11,
 										0x30,0x33,0x36,0x35,0x3c,0x3f,0x3a,0x39,0x28,0x2b,0x2e,0x2d,0x24,0x27,0x22,0x21,
 										0x60,0x63,0x66,0x65,0x6c,0x6f,0x6a,0x69,0x78,0x7b,0x7e,0x7d,0x74,0x77,0x72,0x71,
 										0x50,0x53,0x56,0x55,0x5c,0x5f,0x5a,0x59,0x48,0x4b,0x4e,0x4d,0x44,0x47,0x42,0x41,
@@ -393,7 +465,8 @@ void mix_columns		(unsigned char state[4][4])																		//Implements mix 
 										0x3b,0x38,0x3d,0x3e,0x37,0x34,0x31,0x32,0x23,0x20,0x25,0x26,0x2f,0x2c,0x29,0x2a,
 										0x0b,0x08,0x0d,0x0e,0x07,0x04,0x01,0x02,0x13,0x10,0x15,0x16,0x1f,0x1c,0x19,0x1a};
 
-	for(int i = 0; i < 4; i++)																							//Loops through 4 values of the state array, the 4 numbers are XOD'd after the maxtrix mulitplication is done
+    //Loops through 4 values of the state array, the 4 numbers are XOD'd after the maxtrix mulitplication is done
+	for(int i = 0; i < 4; i++)
 	{
 		output[0][i] = ( (table_2[static_cast<int>(state[0][i])]) ^ (table_3[static_cast<int>(state[1][i])]) ^ state[2][i] ^ state[3][i] );
 	}
@@ -413,7 +486,8 @@ void mix_columns		(unsigned char state[4][4])																		//Implements mix 
 		output[3][i] = ( (table_3[static_cast<int>(state[0][i])]) ^ state[1][i] ^ state[2][i] ^ (table_2[static_cast<int>(state[3][i])]) );
 	}
 
-	for(int i = 0; i < 4; i++)																							//Copies output array on to the state array
+    //Copies output array on to the state array
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
@@ -423,71 +497,88 @@ void mix_columns		(unsigned char state[4][4])																		//Implements mix 
 
 }
 
-void write_to_file		(unsigned char state[4][4], 	std::ofstream &outfile)											//Writes the state array to the output file
+//Writes the state array to the output file
+void write_to_file(unsigned char state[4][4], std::ofstream &outfile)
 {
-	for(int i = 0; i < 4; i++)																							//Goes through all elements of the array
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			outfile << state[j][i];																						//Writes character in array to file
+			outfile << state[j][i];
 		}
 	}
 
 }
 
-void cipher				(unsigned char cipher_key[4][4])																//Function to get user to enter cipher
+//Function to get user to enter cipher
+void cipher(unsigned char cipher_key[4][4])
 {
-	std::string cipher;																									//String to hold cipher key
-	int 		cipher_count = 0;																						//Used to split up each char in the key
+	std::string cipher;
 
-	std::cout << "\nEnter 16 characters for the key.\nLess than 16 will result in blanks being used "					//Asks the user to enter the key
-			  << "which will make the file easier to crack.\n\n"
-			  << "Enter the key here: ";
+	//Used to split up each char in the key
+	int cipher_count = 0;
 
-	std::cin  >> cipher;																								//Writes input to cipher
+	std::cout << "\nEnter 16 characters for the key.\n"
+                 "Less than 16 will result in blanks being used "
+			     "which will make the file easier to crack.\n\n"
+			     "Enter the key here: ";
 
-	for(int i = 0; i < 4; i++)																							//Splits string up into cipher_key array
+    //Writes input to cipher
+	std::cin  >> cipher;
+
+    //Splits string up into cipher_key array
+	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
-			if(cipher.length() <= cipher_count)																			//Checks if the key is less than 16 characters
+		    //Checks if the key is less than 16 characters
+			if(cipher.length() <= cipher_count)
 			{
-				cipher_key[j][i] = ' ';																					//If it is it makes the remainging characters blank
+			    //If it is it makes the remaining characters blank
+				cipher_key[j][i] = ' ';
 			}
 			else
 			{
-				cipher_key[j][i] = cipher.at(cipher_count);																//Reads char from input, writes to cipher_key array
+			    //Reads char from input, writes to cipher_key array
+				cipher_key[j][i] = cipher.at(cipher_count);
 			}
-			cipher_count++;																								//Increments count to read the next char from the input
+
+			//Increments count to read the next char from the input
+			cipher_count++;
 		}
 	}
 }
 
-void encrypt_state		(int &count,																					//Performs AES encryption on a state array
-						 const unsigned char s[16][16],
-						 unsigned char round_key[4][44],
-						 unsigned char state[4][4])
+//Performs AES encryption on a state array
+void encrypt_state(int &count,
+                   const unsigned char s[16][16],
+				   unsigned char round_key[4][44],
+                   unsigned char state[4][4])
 {
-		add_round_key(state, round_key, count);																			//Adds the round key to state
+        //Adds the round key to state
+		add_round_key(state, round_key, count);
 
-		for(int i = 0; i < 9; i++)																						//Does 9 rounds of the encryption
+        //Does 9 rounds of the encryption
+		for(int i = 0; i < 9; i++)
 		{
-			s_box(state, s);																							//Does the s box function
-			row_shift(state);																							//Shift rows function
-			mix_columns(state);																							//Mix columns function
-			add_round_key(state, round_key, count);																		//Adds the round key to state
+			s_box(state, s);
+			row_shift(state);
+			mix_columns(state);
+			add_round_key(state, round_key, count);
 		}
 
-		s_box(state, s);																								//Does the s box function
-		row_shift(state);																								//Shift rows function
-		add_round_key(state, round_key, count);																			//Adds the round key to state
+		s_box(state, s);
+		row_shift(state);
+		add_round_key(state, round_key, count);
 
 		count = 0;
 }
 
-void encrypt_file		(bool output_key)																				//Performs AES 128 Bit Encryption on a file
+//Performs AES 128 Bit Encryption on a file
+void encrypt_file(bool output_key)
 {
-	const unsigned char s[16][16] = 																					//S box look up table
+    //S box look up table
+	const unsigned char s[16][16] =
 	{
 	   0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
 	   0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
@@ -507,7 +598,7 @@ void encrypt_file		(bool output_key)																				//Performs AES 128 Bit E
 	   0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
 	};
 
-	unsigned char state[4][4] = {																						//The array for state
+	unsigned char state[4][4] = {
 					{' ', ' ', ' ', ' '},
 					{' ', ' ', ' ', ' '},
 					{' ', ' ', ' ', ' '},
@@ -515,40 +606,50 @@ void encrypt_file		(bool output_key)																				//Performs AES 128 Bit E
 				};
 
 
-	unsigned char cipher_key[4][4] = {																					//The array for state
+	unsigned char cipher_key[4][4] = {
 					{' ', ' ', ' ', ' '},
 					{' ', ' ', ' ', ' '},
 					{' ', ' ', ' ', ' '},
 					{' ', ' ', ' ', ' '}
 				};
 
-	unsigned char round_key[4][44];																						//Array to hold all permutations of the round key
-	unsigned char a_rot_word[4];																						//Array to hold the rotated column used in the key schedule
+    //Array to hold all permutations of the round key
+	unsigned char round_key[4][44];
+
+	//Array to hold the rotated column used in the key schedule
+	unsigned char a_rot_word[4];
 
 	static int count = 0;
 
-	cipher(cipher_key);																									//Gets the user to enter the cipher
-	key_schedule(cipher_key, round_key, a_rot_word, s, count);															//Expands the entire round key
+	cipher(cipher_key);
 
-	std::ifstream infile;																								//File Stream for file to be read
-	std::ofstream outfile;																								//File Stream for output of encryption
-	std::ofstream outkey;																								//File Stream for output of the cipher key
+	//Expands the entire round key
+	key_schedule(cipher_key, round_key, a_rot_word, s, count);
 
-	open_file(infile, outfile, output_key, outkey, cipher_key);															//Opens the file
+	std::ifstream infile;
+	std::ofstream outfile;
+	std::ofstream outkey;
+
+	open_file(infile, outfile, output_key, outkey, cipher_key);
 
 	while(infile)
 	{
-		write_to_array(infile, state);																					//Writes 16 characters to the state array
-		encrypt_state(count, s, round_key, state);																		//Resets count for the next loop
-		write_to_file(state, outfile);																					//Outputs the final version of state to the file
+	    //Writes 16 characters to the state array
+		write_to_array(infile, state);
+
+		//Resets count for the next loop
+		encrypt_state(count, s, round_key, state);
+
+		//Outputs the final version of state to the file
+		write_to_file(state, outfile);
 	}
 
-	std::cout << "\nThe encryption is complete.";																		//Notifies the user that the program is complete
+	std::cout << "\nThe encryption is complete.";
 }
 
-int main()																												//Main function of program
+int main()
 {
-	main_menu();																										//Runs meny of AES Encryptor
+	main_menu();
 
 	return 0;
 }
