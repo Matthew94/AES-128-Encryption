@@ -66,17 +66,13 @@ void main_menu()
     int choice;
 	std::cin >> choice;
 
-    //For whether the user wants the cipher key to be output to a file
-	auto output_key = false;
-
 	switch(choice)
 	{
 		case 1:
-			encrypt_file(output_key);
+			encrypt_file(false);
 			break;
 		case 2:
-			output_key = true;
-			encrypt_file(output_key);
+			encrypt_file(true);
 			break;
 		case 3:
 			test();
