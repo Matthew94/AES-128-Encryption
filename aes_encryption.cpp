@@ -3,6 +3,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "constants.hpp"
 
 void main_menu();
@@ -181,7 +183,7 @@ void open_file(std::ifstream &infile,
 	key_name = file_name + "_key.txt";
 	file_name = file_name + ".txt";
 
-	outfile.open(file_name.c_str());
+	outfile.open(file_name);
 
 	if(output_key == true)
 	{
@@ -204,10 +206,9 @@ void write_to_array(std::ifstream &infile, unsigned char state[4][4])
 {
 	for(int i = 0; i < 4; i++)
 	{
-		for( int j = 0; j < 4; j++)
+		for(int j = 0; j < 4; j++)
 		{
 			state[j][i] = infile.get();
-
 		}
 	}
 }
@@ -221,14 +222,6 @@ void key_schedule(unsigned char cipher_key[4][4],
 {
     //Used to hold the next generated column of the round key
 	unsigned char temp[4];
-
-    //Array holding the relevant values of the r_con for 128 bit AES
-	const unsigned char r_con[4][10] = {
-	    {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36},
-		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-		{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-    };
 
     //Makes the first 4 columns of the round key the same as the cipher key
 	for(int i = 0; i < 4; i++)
@@ -256,7 +249,7 @@ void key_schedule(unsigned char cipher_key[4][4],
             //before in round key with part of the r_con
 			for(int j = 0; j < 4; j++)
 			{
-				temp[j] = (round_key[j][i - 4] ^ a_rot_word[j] ^ r_con[j][(i / 4) - 1]);
+				temp[j] = (round_key[j][i - 4] ^ a_rot_word[j] ^ aes_const::R_CON[j][(i / 4) - 1]);
 			}
 
             //Assigns the XOR'd column to the round key
@@ -309,14 +302,15 @@ void s_box(unsigned char state[4][4],
 		for(int j = 0; j < 4; j++)
 		{
 		    //Character to hold a character from the array
-			unsigned char n = state[i][j];
+			const unsigned char n = state[i][j];
 
-            //n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
-			char t = 0xF & n;
-			n = n >> 4;																									//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
+            //n is AND'd with 15 in hex to isolate the first digit, i.e the 5 from 15
+			const char t = 0xF & n;
 
-            //The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
-			state[i][j] = s[n][t];
+			// n is bit shifted 4 places across
+			// This is to isolate the second digit from the character
+			// i.e the 1 from 15
+			state[i][j] = s[n >> 4][t];
 		}
 	}
 }
@@ -354,44 +348,24 @@ void add_round_key(unsigned char state[4][4],
 //Shifts the values of the state array
 void row_shift(unsigned char state[4][4])
 {
-    //Array to hold template
-	unsigned char blank[4];
+    std::vector<int> index = {1, 2, 3, 0};
+	unsigned char temp[4];
 
     //Copy a template of a row into an array
-	for(int i = 0; i < 4; i++)
+	for(int i = 1; i < 4; i++)
 	{
-		blank[i] = state[1][i];
+	    for(int j = 0; j < 4; j++){
+    	    temp[j] = state[i][j];
+	    }
+
+        //Shifts values in row n, n bytes over
+        state[i][0] = temp[index[0]];
+        state[i][1] = temp[index[1]];
+        state[i][2] = temp[index[2]];
+        state[i][3] = temp[index[3]];
+
+        std::rotate(index.begin(), index.begin() + 1, index.end());
 	}
-
-    //Shifts values in row 1, 1 byte over
-	state[1][0] = blank[1];
-	state[1][1] = blank[2];
-	state[1][2] = blank[3];
-	state[1][3] = blank[0];
-
-    //Copy a template of a row into an array
-	for(int i = 0; i < 4; i++)
-	{
-		blank[i] = state[2][i];
-	}
-
-    //Shifts values in row 2, 2 bytes over
-	state[2][0] = blank[2];
-	state[2][1] = blank[3];
-	state[2][2] = blank[0];
-	state[2][3] = blank[1];
-
-    //Copy a template of a row into an array
-	for(int i = 0; i < 4; i++)
-	{
-		blank[i] = state[3][i];
-	}
-
-    //Shifts values in row 3, 3 bytes over
-	state[3][0] = blank[3];
-	state[3][1] = blank[0];
-	state[3][2] = blank[1];
-	state[3][3] = blank[2];
 }
 //Implements mix columns function
 void mix_columns(unsigned char state[4][4])
