@@ -140,7 +140,7 @@ void test()
 		{
 			std::cout << std::hex << static_cast<int>(state[i][j]) << "\t";
 		}
-		std::cout << std::endl;
+		std::cout << "\n";
 	}
 }
 
@@ -232,7 +232,7 @@ void key_schedule(unsigned char cipher_key[4][4],
 		}
 	}
 
-    //Loop goes through all columns of the round key
+    // Loop goes through all columns of the round key
     // starts at 4 to ignore the cipher values
 	for(int i = 4; i < 44; i++)
 	{
