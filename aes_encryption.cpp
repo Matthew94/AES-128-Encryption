@@ -100,7 +100,6 @@ void main_menu()
 	}
 }
 
-
 void test()
 {
 	unsigned char cipher_key[4][4] = {
@@ -179,8 +178,8 @@ void open_file(std::ifstream &infile,
 	std::cout << "Enter the name of a file to be written to (if it already exists it will be overwritten): ";
 	std::cin >> file_name;
 
-	key_name  = (file_name + "_key" + ".txt");
-	file_name = (file_name + ".txt");
+	key_name = file_name + "_key.txt";
+	file_name = file_name + ".txt";
 
 	outfile.open(file_name.c_str());
 
@@ -510,22 +509,10 @@ void encrypt_state(int &count,
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file(bool output_key)
 {
-	unsigned char state[4][4] = {
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '}
-				};
+	unsigned char state[4][4];
 
+	unsigned char cipher_key[4][4];
 
-	unsigned char cipher_key[4][4] = {
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '},
-					{' ', ' ', ' ', ' '}
-				};
-
-    //Array to hold all permutations of the round key
 	unsigned char round_key[4][44];
 
 	//Array to hold the rotated column used in the key schedule
