@@ -22,8 +22,8 @@ int add_round_key(
     int count
 );
 
-void s_box(
-    std::array<std::array<unsigned char, 4>, 4> &state
+std::array<std::array<unsigned char, 4>, 4> s_box(
+    std::array<std::array<unsigned char, 4>, 4> state
 );
 
 void row_shift(

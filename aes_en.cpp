@@ -15,7 +15,7 @@ void encrypt_state(
         //Does 9 rounds of the encryption
 		for(int i = 0; i < 10; i++)
 		{
-			s_box(state);
+			state = s_box(state);
 			row_shift(state);
             if (i != 9)
             {
@@ -45,8 +45,8 @@ int add_round_key(
 }
 
 //S box function to be used in the encryption loop
-void s_box(
-    std::array<std::array<unsigned char, 4>, 4> &state
+std::array<std::array<unsigned char, 4>, 4> s_box(
+    std::array<std::array<unsigned char, 4>, 4> state
 )
 {
 	for(int i = 0; i < 4; i++)
@@ -65,6 +65,8 @@ void s_box(
 			state[i][j] = aes_const::S_BOX[n >> 4][t];
 		}
 	}
+
+	return state;
 }
 
 //Shifts the values of the state array
