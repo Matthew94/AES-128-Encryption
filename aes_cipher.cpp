@@ -1,7 +1,7 @@
 #include "aes_cipher.hpp"
 
 //Function to get user to enter cipher
-std::array<std::array<unsigned char, 4>, 4> cipher()
+std::array<std::array<unsigned char, 4>, 4> get_cipher_key()
 {
     //Used to split up each char in the key
     unsigned int cipher_count = 0;

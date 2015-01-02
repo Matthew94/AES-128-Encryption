@@ -102,7 +102,7 @@ void print_test_array(
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file()
 {
-    auto cipher_key = cipher();
+    auto cipher_key = get_cipher_key();
 
     //Expands the entire round key
     auto round_key = key_schedule(cipher_key);
