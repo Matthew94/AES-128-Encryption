@@ -1,18 +1,18 @@
 #ifndef _AES_FILE_FUNCTIONS_
 #define _AES_FILE_FUNCTIONS_
 
-#include <array>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 void write_to_array(
     std::ifstream &infile,
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 );
 
 void write_to_file(
-    std::array<std::array<unsigned char, 4>, 4> state,
+    std::vector<std::vector<unsigned char>> state,
     std::ofstream &outfile
 );
 

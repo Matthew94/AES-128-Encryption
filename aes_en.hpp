@@ -13,25 +13,25 @@
 
 void encrypt_state(
     std::array<std::array<unsigned char, 44>, 4> &round_key,
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 );
 
 int add_round_key(
-    std::array<std::array<unsigned char, 4>, 4> &state,
+    std::vector<std::vector<unsigned char>> &state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int count
 );
 
-std::array<std::array<unsigned char, 4>, 4> sub_bytes(
-    std::array<std::array<unsigned char, 4>, 4> state
+std::vector<std::vector<unsigned char>> sub_bytes(
+    std::vector<std::vector<unsigned char>> state
 );
 
 void shift_rows(
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 );
 
-std::array<std::array<unsigned char, 4>, 4> mix_columns(
-    std::array<std::array<unsigned char, 4>, 4> state
+std::vector<std::vector<unsigned char>> mix_columns(
+    std::vector<std::vector<unsigned char>> state
 );
 
 std::array<std::array<unsigned char, 4>, 4> cipher();

@@ -3,7 +3,7 @@
 //Reads 16 characters from text file, writes to state array
 void write_to_array(
     std::ifstream &infile,
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 )
 {
 	for(int i = 0; i < 4; i++)
@@ -17,7 +17,7 @@ void write_to_array(
 
 //Writes the state array to the output file
 void write_to_file(
-    std::array<std::array<unsigned char, 4>, 4> state,
+    std::vector<std::vector<unsigned char>> state,
     std::ofstream &outfile
 )
 {

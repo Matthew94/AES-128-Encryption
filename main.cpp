@@ -7,6 +7,7 @@ Made for my first year final C++ project. Now being fixed up.
 #include <iostream>
 #include <fstream>
 #include <array>
+#include <vector>
 
 #include "aes_constants.hpp"
 #include "aes_strings.hpp"
@@ -21,7 +22,7 @@ void test();
 void encrypt_file();
 
 void print_test_array(
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 );
 
 void main_menu()
@@ -61,7 +62,7 @@ void test()
         }
     };
 
-	std::array<std::array<unsigned char, 4>, 4> state =
+	std::vector<std::vector<unsigned char>> state
 	{
 	    {
             {{0x32, 0x88, 0x31, 0xe0}},
@@ -80,7 +81,7 @@ void test()
 }
 
 void print_test_array(
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 )
 {
 	std::cout << "\nThe results are:\n";
@@ -100,7 +101,12 @@ void print_test_array(
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file()
 {
-	std::array<std::array<unsigned char, 4>, 4> state;
+	std::vector<std::vector<unsigned char>> state {
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	};
 
 	auto cipher_key = cipher();
 

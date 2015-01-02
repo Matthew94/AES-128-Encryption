@@ -4,7 +4,7 @@
 
 void encrypt_state(
     std::array<std::array<unsigned char, 44>, 4> &round_key,
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 )
 {
         int count = 0;
@@ -27,7 +27,7 @@ void encrypt_state(
 
 //XORs the round key with state
 int add_round_key(
-    std::array<std::array<unsigned char, 4>, 4> &state,
+    std::vector<std::vector<unsigned char>> &state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int count
 )
@@ -45,8 +45,8 @@ int add_round_key(
 }
 
 //S box function to be used in the encryption loop
-std::array<std::array<unsigned char, 4>, 4> sub_bytes(
-    std::array<std::array<unsigned char, 4>, 4> state
+std::vector<std::vector<unsigned char>> sub_bytes(
+    std::vector<std::vector<unsigned char>> state
 )
 {
 	for(int i = 0; i < 4; i++)
@@ -67,36 +67,28 @@ std::array<std::array<unsigned char, 4>, 4> sub_bytes(
 
 //Shifts the values of the state array
 void shift_rows(
-    std::array<std::array<unsigned char, 4>, 4> &state
+    std::vector<std::vector<unsigned char>> &state
 )
 {
-    std::vector<int> index = {1, 2, 3, 0};
-	unsigned char temp[4];
-
     //Copy a template of a row into an array
-	for(int i = 1; i < 4; i++)
+	for(int i = 0; i < 4; i++)
 	{
-	    for(int j = 0; j < 4; j++){
-    	    temp[j] = state[i][j];
-	    }
-
-        //Shifts values in row n, n bytes over
-        state[i][0] = temp[index[0]];
-        state[i][1] = temp[index[1]];
-        state[i][2] = temp[index[2]];
-        state[i][3] = temp[index[3]];
-
-        std::rotate(index.begin(), index.begin() + 1, index.end());
+        std::rotate(state[i].begin(), state[i].begin() + i, state[i].end());
 	}
 }
 
 //Implements mix columns function
-std::array<std::array<unsigned char, 4>, 4> mix_columns(
-    std::array<std::array<unsigned char, 4>, 4> state
+std::vector<std::vector<unsigned char>> mix_columns(
+    std::vector<std::vector<unsigned char>> state
 )
 {
     //4x4 array for holding result of mix columns function
-	std::array<std::array<unsigned char, 4>, 4> output;
+	std::vector<std::vector<unsigned char>> output {
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	    {0x00, 0x00, 0x00, 0x00},
+	};
 
     // Loops through 4 values of the state array
     // the 4 numbers are XOD'd after the matrix multiplication is done
