@@ -1,7 +1,7 @@
 #include "aes_key.hpp"
 
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    std::array<std::array<unsigned char, 4>, 4> cipher_key
+    const std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
 {
     //Array to hold all permutations of the round key

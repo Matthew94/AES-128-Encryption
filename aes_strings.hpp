@@ -8,7 +8,7 @@ namespace aes_const{
 const std::string MENU = "\n***** AES 128 Bit Encryption Program *****\n\n"
                         "[1] Encrypt .txt file.\n"
                         "[2] Test encryption.\n"
-                        "[3] Text Keygen"
+                        "[3] Text Keygen.\n"
                         "[4] Description of options.\n"
                         "[ANY OTHER KEY] Quit the program\n\n"
                         "Enter your choice: ";

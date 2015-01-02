@@ -24,8 +24,12 @@ void test_cipher();
 
 void encrypt_file();
 
-void print_test_array(
+void print_en_test_array(
     std::vector<std::vector<unsigned char>> &state
+);
+
+void print_key_test_array(
+    const std::array<std::array<unsigned char, 44>, 4> round_key
 );
 
 void main_menu()
@@ -69,8 +73,7 @@ void test_encryption()
         }
     };
 
-    std::vector<std::vector<unsigned char>> state
-    {
+    std::vector<std::vector<unsigned char>> state{
         {
             {{0x32, 0x88, 0x31, 0xe0}},
             {{0x43, 0x5a, 0x31, 0x37}},
@@ -84,15 +87,26 @@ void test_encryption()
     //Resets count for the next loop
     encrypt_state(round_key, state);
 
-    print_test_array(state);
+    print_en_test_array(state);
 }
 
 void test_cipher()
 {
-    1+1;
+    const std::array<std::array<unsigned char, 4>, 4> cipher_key = {
+        {
+            {{0x2b, 0x28, 0xab, 0x09}},
+            {{0x7e, 0xae, 0xf7, 0xcf}},
+            {{0x15, 0xd2, 0x15, 0x4f}},
+            {{0x16, 0xa6, 0x88, 0x3c}},
+        }
+    };
+
+    const auto round_key = key_schedule(cipher_key);
+
+    print_key_test_array(round_key);
 }
 
-void print_test_array(
+void print_en_test_array(
     std::vector<std::vector<unsigned char>> &state
 )
 {
@@ -108,12 +122,34 @@ void print_test_array(
     }
 }
 
+void print_key_test_array(
+    const std::array<std::array<unsigned char, 44>, 4> round_key
+)
+{
+    std::cout << "\nThe results are:\n";
+
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 44; j++)
+        {
+            if(round_key[i][j] < 16){
+                std::cout << std::hex << static_cast<int>(round_key[i][j]) << "  ";
+            }
+            else{
+                std::cout << std::hex << static_cast<int>(round_key[i][j]) << " ";
+            }
+
+        }
+        std::cout << "\n";
+    }
+}
+
 
 
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file()
 {
-    auto cipher_key = get_cipher_key();
+    const auto cipher_key = get_cipher_key();
 
     //Expands the entire round key
     auto round_key = key_schedule(cipher_key);
