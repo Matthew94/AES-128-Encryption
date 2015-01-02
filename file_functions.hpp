@@ -1,3 +1,11 @@
+#ifndef _AES_FUNCTIONS_
+#define _AES_FUNCTIONS_
+
+#include <array>
+#include <iostream>
+#include <fstream>
+#include <string>
+
 void write_to_array(
     std::ifstream &infile,
     std::array<std::array<unsigned char, 4>, 4> &state
@@ -12,3 +20,5 @@ void open_file(
     std::ifstream &infile,
     std::ofstream &outfile
 );
+
+#endif // _AES_FUNCTIONS_

@@ -3,6 +3,14 @@
 #ifndef _AES_ENCRYPTION_FUNCTIONS_
 #define _AES_ENCRYPTION_FUNCTIONS_
 
+#include <array>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#include "constants.hpp"
+#include "aes_strings.hpp"
+
 void encrypt_state(
     std::array<std::array<unsigned char, 44>, 4> &round_key,
     std::array<std::array<unsigned char, 4>, 4> &state

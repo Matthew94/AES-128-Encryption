@@ -1,6 +1,6 @@
 //Performs AES encryption on a state array
 
-#include <aes_en.hpp>
+#include "aes_en.hpp"
 
 void encrypt_state(
     std::array<std::array<unsigned char, 44>, 4> &round_key,
@@ -227,10 +227,7 @@ std::array<std::array<unsigned char, 4>, 4> cipher()
 	//Used to split up each char in the key
 	unsigned int cipher_count = 0;
 
-	std::cout << "\nEnter 16 characters for the key.\n"
-                 "Less than 16 will result in blanks being used "
-			     "which will make the file easier to crack.\n\n"
-			     "Enter the key here: ";
+	std::cout << aes_const::ENTER_KEY;
 
     std::array<std::array<unsigned char, 4>, 4> cipher_key;
 

@@ -1,5 +1,5 @@
-#ifndef AES_STRINGS
-#define AES_STRINGS
+#ifndef _AES_STRINGS_
+#define _AES_STRINGS_
 
 #include <string>
 
@@ -32,6 +32,12 @@ const std::string INFO =
      "blockciphers/rijndael_ingles2004.swf\n\n"
      "It should prove that this program works correctly.\n";
 
+const std::string ENTER_KEY =
+    "\nEnter 16 characters for the key.\n"
+    "Less than 16 will result in blanks being used "
+	"which will make the file easier to crack.\n\n"
+	"Enter the key here: ";
+
 }
 
-#endif // AES_STRINGS
+#endif // _AES_STRINGS_

@@ -1,5 +1,5 @@
-#ifndef AES_CONSTANTS
-#define AES_CONSTANTS
+#ifndef _AES_CONSTANTS_
+#define _AES_CONSTANTS_
 
 namespace aes_const{
 
@@ -121,4 +121,4 @@ const unsigned char R_CON[4][10] = {
 };
 }
 
-#endif // AES_CONSTANTS
+#endif // _AES_CONSTANTS_

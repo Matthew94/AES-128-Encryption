@@ -6,15 +6,12 @@ Made for my first year final C++ project. Now being fixed up.
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
 #include <array>
-#include <algorithm>
 
 #include "constants.hpp"
 #include "aes_strings.hpp"
-
-
+#include "aes_en.hpp"
+#include "file_functions.hpp"
 
 void main_menu();
 
