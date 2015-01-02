@@ -15,7 +15,7 @@ void test();
 void encrypt_file(bool output_key);
 
 void add_round_key(unsigned char state[4][4],
-                   unsigned char round_key[4][44],
+                   std::array<std::array<unsigned char, 44>, 4> &round_key,
                    int &count);
 
 void write_to_array(std::ifstream &infile,
@@ -27,7 +27,7 @@ void s_box_k(unsigned char state[4],
 void s_box(unsigned char state[4][4],
            const unsigned char s[16][16]);
 
-void rot_word(unsigned char round_key[4][44],
+void rot_word(std::array<std::array<unsigned char, 44>, 4> &round_key,
               unsigned char rot_word[4],
               int &count);
 
@@ -42,7 +42,7 @@ void cipher(unsigned char cipher_key[4][4]);
 
 void encrypt_state(int &count,
                    const unsigned char s[16][16],
-                   unsigned char round_key[4][44],
+                   std::array<std::array<unsigned char, 44>, 4> &round_key,
                    unsigned char state[4][4]);
 
 void open_file(std::ifstream &infile,
@@ -51,11 +51,12 @@ void open_file(std::ifstream &infile,
                std::ofstream &outkey,
                unsigned char cipher_key[4][4]);
 
-void key_schedule(unsigned char cipher_key[4][4],
-				  unsigned char round_key[4][44],
-				  unsigned char a_rot_word[4],
-				  const unsigned char s[16][16],
-				  int &count);
+std::array<std::array<unsigned char, 44>, 4> key_schedule(
+    unsigned char cipher_key[4][4],
+	unsigned char a_rot_word[4],
+	const unsigned char s[16][16],
+	int &count
+);
 
 void main_menu()
 {
@@ -121,14 +122,11 @@ void test()
 
 	static int count = 0;
 
-	//Array to hold all permutations of the round key
-	unsigned char round_key[4][44];
-
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
 
     //Expands the entire round key
-	key_schedule(cipher_key, round_key, a_rot_word, aes_const::S_BOX, count);
+	auto round_key = key_schedule(cipher_key, a_rot_word, aes_const::S_BOX, count);
 
 	//Resets count for the next loop
 	encrypt_state(count, aes_const::S_BOX, round_key, state);
@@ -215,12 +213,16 @@ void write_to_array(std::ifstream &infile, unsigned char state[4][4])
 }
 
 //Implements the key schedule and expands the whole round key
-void key_schedule(unsigned char cipher_key[4][4],
-				  unsigned char round_key[4][44],
-				  unsigned char a_rot_word[4],
-				  const unsigned char s[16][16],
-				  int &count)
+std::array<std::array<unsigned char, 44>, 4> key_schedule(
+    unsigned char cipher_key[4][4],
+	unsigned char a_rot_word[4],
+	const unsigned char s[16][16],
+	int &count
+)
 {
+    //Array to hold all permutations of the round key
+	std::array<std::array<unsigned char, 44>, 4> round_key;
+
     //Used to hold the next generated column of the round key
 	unsigned char temp[4];
 
@@ -272,6 +274,7 @@ void key_schedule(unsigned char cipher_key[4][4],
 	}
 
 	count = 0;
+	return round_key;
 }
 
 //S Box function to be used with the round key expansion
@@ -317,7 +320,7 @@ void s_box(unsigned char state[4][4],
 }
 
 //Used in key expansion, rotates a column by 1 byte "upwards"
-void rot_word(unsigned char round_key[4][44],
+void rot_word(std::array<std::array<unsigned char, 44>, 4> &round_key,
               unsigned char rot_word[4],
               int &count)
 {
@@ -331,7 +334,7 @@ void rot_word(unsigned char round_key[4][44],
 
 //XORs the round key with state
 void add_round_key(unsigned char state[4][4],
-                   unsigned char round_key[4][44],
+                   std::array<std::array<unsigned char, 44>, 4> &round_key,
                    int &count)
 {
 	for(int i = 0; i < 4; i++)
@@ -460,7 +463,7 @@ void cipher(unsigned char cipher_key[4][4])
 //Performs AES encryption on a state array
 void encrypt_state(int &count,
                    const unsigned char s[16][16],
-				   unsigned char round_key[4][44],
+				   std::array<std::array<unsigned char, 44>, 4> &round_key,
                    unsigned char state[4][4])
 {
         //Adds the round key to state
@@ -488,8 +491,6 @@ void encrypt_file(bool output_key)
 
 	unsigned char cipher_key[4][4];
 
-	unsigned char round_key[4][44];
-
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
 
@@ -498,7 +499,7 @@ void encrypt_file(bool output_key)
 	cipher(cipher_key);
 
 	//Expands the entire round key
-	key_schedule(cipher_key, round_key, a_rot_word, aes_const::S_BOX, count);
+	auto round_key = key_schedule(cipher_key, a_rot_word, aes_const::S_BOX, count);
 
 	std::ifstream infile;
 	std::ofstream outfile;

@@ -32,7 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Unit filename="aes_encryption.cpp" />
+		<Unit filename="constants.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
