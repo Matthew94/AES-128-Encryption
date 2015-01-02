@@ -77,16 +77,12 @@ std::array<unsigned char, 4> sub_bytes_k(
 {
 	for(int i = 0; i < 4; i++)
 	{
-	    // Character to hold a character from the array
-		unsigned char n = a_rot_word[i];
+        //Character to hold a character from the array
+        const unsigned char n = a_rot_word[i];
 
-        // n is AND'd with 15 in hex to isloate the first digit
-        // i.e the 5 from 15
-		unsigned char t = 0xF & n;
-
-        // The 2 isolated numbers are inserted into the s_boxs_box array
-        // This is assigned to the state array
-		a_rot_word[i] = aes_const::S_BOX[n >> 4][t];
+        //n is AND'd with 15 in hex to isolate the first digit
+        // n is bit shifted 4 places across to get the second digit
+		a_rot_word[i] = aes_const::S_BOX[n >> 4][n & 0xF];
 	}
 
 	return a_rot_word;

@@ -56,13 +56,9 @@ std::array<std::array<unsigned char, 4>, 4> sub_bytes(
 		    //Character to hold a character from the array
 			const unsigned char n = state[i][j];
 
-            //n is AND'd with 15 in hex to isolate the first digit, i.e the 5 from 15
-			const int t = 0xF & n;
-
-			// n is bit shifted 4 places across
-			// This is to isolate the second digit from the character
-			// i.e the 1 from 15
-			state[i][j] = aes_const::S_BOX[n >> 4][t];
+            //n is AND'd with 15 in hex to isolate the first digit
+			// n is bit shifted 4 places across to get the second digit
+			state[i][j] = aes_const::S_BOX[n >> 4][n & 0xF];
 		}
 	}
 
