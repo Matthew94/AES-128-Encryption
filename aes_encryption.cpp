@@ -51,6 +51,8 @@ void open_file(std::ifstream &infile,
                std::ofstream &outkey,
                unsigned char cipher_key[4][4]);
 
+void print_test_array(unsigned char state[4][4]);
+
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     unsigned char cipher_key[4][4],
 	unsigned char a_rot_word[4],
@@ -131,6 +133,11 @@ void test()
 	//Resets count for the next loop
 	encrypt_state(count, aes_const::S_BOX, round_key, state);
 
+    print_test_array(state);
+}
+
+void print_test_array(unsigned char state[4][4])
+{
 	std::cout << "\nThe results are:\n";
 
 	for(int i = 0; i < 4; i++)
