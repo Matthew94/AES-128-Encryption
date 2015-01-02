@@ -34,8 +34,6 @@ std::vector<std::vector<unsigned char>> mix_columns(
     std::vector<std::vector<unsigned char>> state
 );
 
-std::array<std::array<unsigned char, 4>, 4> cipher();
-
 #endif // _AES_ENCRYPTION_FUNCTIONS_
 
 
