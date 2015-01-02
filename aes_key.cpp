@@ -26,7 +26,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 			auto a_rot_word = rot_word(round_key, i - 4);
 
             //Performs the s box on it
-			a_rot_word = s_box_k(a_rot_word);
+			a_rot_word = sub_bytes_k(a_rot_word);
 
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
@@ -71,7 +71,7 @@ std::array<unsigned char, 4> rot_word(
     return rot_word;
 }
 
-std::array<unsigned char, 4> s_box_k(
+std::array<unsigned char, 4> sub_bytes_k(
     std::array<unsigned char, 4> a_rot_word
 )
 {

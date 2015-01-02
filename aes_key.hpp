@@ -23,7 +23,7 @@ std::array<unsigned char, 4> rot_word(
 /*
 S Box function to be used with the round key expansion
 */
-std::array<unsigned char, 4> s_box_k(
+std::array<unsigned char, 4> sub_bytes_k(
     std::array<unsigned char, 4> rot_word
 );
 #endif // _AES_KEY_
