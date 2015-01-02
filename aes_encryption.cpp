@@ -173,12 +173,11 @@ void open_file(std::ifstream &infile,
 		}
 	}
 
-
 	std::cout << "Enter the name of a file to be written to (if it already exists it will be overwritten): ";
 	std::cin >> file_name;
 
 	key_name = file_name + "_key.txt";
-	file_name = file_name + ".txt";
+	file_name += ".txt";
 
 	outfile.open(file_name);
 
