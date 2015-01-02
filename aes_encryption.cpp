@@ -140,7 +140,7 @@ void test()
 		{0xa8, 0x8d, 0xa2, 0x34}
     };
 
-	static int count = 0;
+	int count = 0;
 
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
@@ -515,7 +515,7 @@ void encrypt_file(bool output_key)
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
 
-	static int count = 0;
+	int count = 0;
 
 	auto cipher_key = cipher();
 
