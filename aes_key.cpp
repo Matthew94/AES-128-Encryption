@@ -61,10 +61,12 @@ std::array<unsigned char, 4> rot_word(
 )
 {
     std::array<unsigned char, 4> rot_word = {
-        round_key[1][3 + i],
-        round_key[2][3 + i],
-        round_key[3][3 + i],
-        round_key[0][3 + i]
+        {
+            round_key[1][3 + i],
+            round_key[2][3 + i],
+            round_key[3][3 + i],
+            round_key[0][3 + i]
+        }
     };
 
     return rot_word;
