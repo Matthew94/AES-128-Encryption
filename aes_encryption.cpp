@@ -40,7 +40,7 @@ int rot_word(
 );
 
 void write_to_file(
-    std::array<std::array<unsigned char, 4>, 4> &state,
+    std::array<std::array<unsigned char, 4>, 4> state,
     std::ofstream &outfile
 );
 
@@ -454,7 +454,7 @@ std::array<std::array<unsigned char, 4>, 4> mix_columns(
 
 //Writes the state array to the output file
 void write_to_file(
-    std::array<std::array<unsigned char, 4>, 4> &state,
+    std::array<std::array<unsigned char, 4>, 4> state,
     std::ofstream &outfile
 )
 {
