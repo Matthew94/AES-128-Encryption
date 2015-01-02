@@ -350,7 +350,7 @@ void s_box(
 			const unsigned char n = state[i][j];
 
             //n is AND'd with 15 in hex to isolate the first digit, i.e the 5 from 15
-			const char t = 0xF & n;
+			const int t = 0xF & n;
 
 			// n is bit shifted 4 places across
 			// This is to isolate the second digit from the character
@@ -471,7 +471,7 @@ void write_to_file(
 std::array<std::array<unsigned char, 4>, 4> cipher()
 {
 	//Used to split up each char in the key
-	int cipher_count = 0;
+	unsigned int cipher_count = 0;
 
 	std::cout << "\nEnter 16 characters for the key.\n"
                  "Less than 16 will result in blanks being used "
