@@ -35,8 +35,8 @@ const std::string INFO =
 const std::string ENTER_KEY =
     "\nEnter 16 characters for the key.\n"
     "Less than 16 will result in blanks being used "
-	"which will make the file easier to crack.\n\n"
-	"Enter the key here: ";
+    "which will make the file easier to crack.\n\n"
+    "Enter the key here: ";
 
 }
 
