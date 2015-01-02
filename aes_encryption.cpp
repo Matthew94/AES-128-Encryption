@@ -29,7 +29,7 @@ void s_box_k(unsigned char state[4]);
 
 void s_box(unsigned char state[4][4]);
 
-void rot_word(std::array<std::array<unsigned char, 44>, 4> &round_key,
+void rot_word(std::array<std::array<unsigned char, 44>, 4> round_key,
               unsigned char rot_word[4],
               int &count);
 
@@ -336,7 +336,7 @@ void s_box(unsigned char state[4][4])
 }
 
 //Used in key expansion, rotates a column by 1 byte "upwards"
-void rot_word(std::array<std::array<unsigned char, 44>, 4> &round_key,
+void rot_word(std::array<std::array<unsigned char, 44>, 4> round_key,
               unsigned char rot_word[4],
               int &count)
 {
