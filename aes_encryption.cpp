@@ -72,8 +72,7 @@ void print_test_array(
 );
 
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    std::array<std::array<unsigned char, 4>, 4> cipher_key,
-	unsigned char a_rot_word[4]
+    std::array<std::array<unsigned char, 4>, 4> cipher_key
 );
 
 void main_menu()
@@ -157,12 +156,8 @@ void test()
             {0xa8, 0x8d, 0xa2, 0x34}
 	    }
     };
-
-	//Array to hold the rotated column used in the key schedule
-	unsigned char a_rot_word[4];
-
     //Expands the entire round key
-	auto round_key = key_schedule(cipher_key, a_rot_word);
+	auto round_key = key_schedule(cipher_key);
 
 	//Resets count for the next loop
 	encrypt_state(round_key, state);
@@ -258,11 +253,12 @@ void write_to_array(
 
 //Implements the key schedule and expands the whole round key
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    std::array<std::array<unsigned char, 4>, 4> cipher_key,
-	unsigned char a_rot_word[4]
+    std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
 {
     int count = 0;
+
+    unsigned char a_rot_word[4];
 
     //Array to hold all permutations of the round key
 	std::array<std::array<unsigned char, 44>, 4> round_key;
@@ -540,13 +536,10 @@ void encrypt_file(
 {
 	std::array<std::array<unsigned char, 4>, 4> state;
 
-	//Array to hold the rotated column used in the key schedule
-	unsigned char a_rot_word[4];
-
 	auto cipher_key = cipher();
 
 	//Expands the entire round key
-	auto round_key = key_schedule(cipher_key, a_rot_word);
+	auto round_key = key_schedule(cipher_key);
 
 	std::ifstream infile;
 	std::ofstream outfile;
