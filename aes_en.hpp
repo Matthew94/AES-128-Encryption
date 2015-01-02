@@ -26,7 +26,7 @@ std::array<std::array<unsigned char, 4>, 4> s_box(
     std::array<std::array<unsigned char, 4>, 4> state
 );
 
-void row_shift(
+void shift_rows(
     std::array<std::array<unsigned char, 4>, 4> &state
 );
 

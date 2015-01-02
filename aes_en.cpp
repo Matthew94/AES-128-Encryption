@@ -16,7 +16,7 @@ void encrypt_state(
 		for(int i = 0; i < 10; i++)
 		{
 			state = s_box(state);
-			row_shift(state);
+			shift_rows(state);
             if (i != 9)
             {
                 state = mix_columns(state);
@@ -70,7 +70,7 @@ std::array<std::array<unsigned char, 4>, 4> s_box(
 }
 
 //Shifts the values of the state array
-void row_shift(
+void shift_rows(
     std::array<std::array<unsigned char, 4>, 4> &state
 )
 {
