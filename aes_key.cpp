@@ -1,6 +1,5 @@
 #include "aes_key.hpp"
 
-//Implements the key schedule and expands the whole round key
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
@@ -9,7 +8,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 	std::array<std::array<unsigned char, 44>, 4> round_key;
 
     //Used to hold the next generated column of the round key
-	unsigned char temp[4];
+	std::array<unsigned char, 4> temp;
 
     //Makes the first 4 columns of the round key the same as the cipher key
 	for(int i = 0; i < 4; i++)

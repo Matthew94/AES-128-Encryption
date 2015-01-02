@@ -5,6 +5,9 @@
 
 #include "aes_constants.hpp"
 
+/*
+Runs the AES key schedule and generates the round key.
+*/
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     std::array<std::array<unsigned char, 4>, 4> cipher_key
 );

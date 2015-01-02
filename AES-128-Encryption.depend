@@ -44,7 +44,7 @@
 
 1420208326 c:\users\matthew\documents\github\aes-128-encryption\aes_constants.hpp
 
-1420208785 source:c:\users\matthew\documents\github\aes-128-encryption\main.cpp
+1420209269 source:c:\users\matthew\documents\github\aes-128-encryption\main.cpp
 	<iostream>
 	<fstream>
 	<array>
@@ -52,4 +52,9 @@
 	"aes_strings.hpp"
 	"aes_en.hpp"
 	"aes_file_functions.hpp"
+	"aes_key.hpp"
+
+1420209580 c:\users\matthew\documents\github\aes-128-encryption\aes_key.hpp
+	<array>
+	"aes_constants.hpp"
 
