@@ -19,7 +19,7 @@ void test();
 void encrypt_file(bool output_key);
 
 int add_round_key(unsigned char state[4][4],
-                   std::array<std::array<unsigned char, 44>, 4> &round_key,
+                   std::array<std::array<unsigned char, 44>, 4> round_key,
                    int count);
 
 void write_to_array(std::ifstream &infile,
@@ -278,7 +278,6 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 				round_key[j][i] = temp[j];
 			}
 		}
-
         //Checks if the value of the round key is not divisible evenly by 4
 		else
 		{
@@ -345,7 +344,7 @@ int rot_word(std::array<std::array<unsigned char, 44>, 4> round_key,
 
 //XORs the round key with state
 int add_round_key(unsigned char state[4][4],
-                   std::array<std::array<unsigned char, 44>, 4> &round_key,
+                   std::array<std::array<unsigned char, 44>, 4> round_key,
                    int count)
 {
 	for(int i = 0; i < 4; i++)
