@@ -14,7 +14,6 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 
 std::array<unsigned char, 4> rot_word(
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    std::array<unsigned char, 4> rot_word,
     int i
 );
 

@@ -11,24 +11,19 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 	std::array<unsigned char, 4> temp;
 
     //Makes the first 4 columns of the round key the same as the cipher key
-	for(int i = 0; i < 4; i++)
-	{
-		for(int j = 0; j < 4; j++)
-		{
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
 			round_key[i][j] = cipher_key[i][j];
 		}
 	}
-
-    std::array<unsigned char, 4> a_rot_word;
 
     // Loop goes through all columns of the round key
     // starts at 4 to ignore the cipher values
 	for(int i = 4; i < 44; i++)
 	{
-
 		if(i % 4 == 0)
 		{
-			a_rot_word = rot_word(round_key, a_rot_word, i - 4);
+			auto a_rot_word = rot_word(round_key, i - 4);
 
             //Performs the s box on it
 			a_rot_word = s_box_k(a_rot_word);
@@ -46,7 +41,6 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 				round_key[j][i] = temp[j];
 			}
 		}
-        //Checks if the value of the round key is not divisible evenly by 4
 		else
 		{
 			for(int j = 0; j < 4; j++)
@@ -63,16 +57,17 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 //Used in key expansion, rotates a column by 1 byte "upwards"
 std::array<unsigned char, 4> rot_word(
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    std::array<unsigned char, 4> rot_word,
     int i
 )
 {
-	rot_word[0] = round_key[1][3 + i];
-	rot_word[1] = round_key[2][3 + i];
-	rot_word[2] = round_key[3][3 + i];
-	rot_word[3] = round_key[0][3 + i];
+    std::array<unsigned char, 4> rot_word = {
+        round_key[1][3 + i],
+        round_key[2][3 + i],
+        round_key[3][3 + i],
+        round_key[0][3 + i]
+    };
 
-	return rot_word;
+    return rot_word;
 }
 
 //S Box function to be used with the round key expansion
