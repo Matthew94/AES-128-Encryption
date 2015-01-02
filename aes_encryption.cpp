@@ -40,7 +40,7 @@ void row_shift(unsigned char state[4][4]);
 
 void mix_columns(unsigned char state[4][4]);
 
-void cipher(unsigned char cipher_key[4][4]);
+std::array<std::array<unsigned char, 4>, 4> cipher();
 
 void encrypt_state(int &count,
                    std::array<std::array<unsigned char, 44>, 4> &round_key,
@@ -50,12 +50,12 @@ void open_file(std::ifstream &infile,
                std::ofstream &outfile,
                bool output_key,
                std::ofstream &outkey,
-               unsigned char cipher_key[4][4]);
+               std::array<std::array<unsigned char, 4>, 4> cipher_key);
 
 void print_test_array(unsigned char state[4][4]);
 
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    unsigned char cipher_key[4][4],
+    std::array<std::array<unsigned char, 4>, 4> cipher_key,
 	unsigned char a_rot_word[4],
 	int &count
 );
@@ -124,11 +124,13 @@ void main_menu()
 
 void test()
 {
-	unsigned char cipher_key[4][4] = {
-		{0x2b, 0x28, 0xab, 0x09},
-		{0x7e, 0xae, 0xf7, 0xcf},
-		{0x15, 0xd2, 0x15, 0x4f},
-		{0x16, 0xa6, 0x88, 0x3c}
+	std::array<std::array<unsigned char, 4>, 4> cipher_key = {
+	    {
+            {0x2b, 0x28, 0xab, 0x09},
+            {0x7e, 0xae, 0xf7, 0xcf},
+            {0x15, 0xd2, 0x15, 0x4f},
+            {0x16, 0xa6, 0x88, 0x3c}
+        }
     };
 
 	unsigned char state[4][4] = {
@@ -170,7 +172,7 @@ void open_file(std::ifstream &infile,
                std::ofstream &outfile,
                bool output_key,
                std::ofstream &outkey,
-               unsigned char cipher_key[4][4])
+               std::array<std::array<unsigned char, 4>, 4> cipher_key)
 {
 	std::string file_name;
 	std::string key_name;
@@ -233,7 +235,7 @@ void write_to_array(std::ifstream &infile, unsigned char state[4][4])
 
 //Implements the key schedule and expands the whole round key
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    unsigned char cipher_key[4][4],
+    std::array<std::array<unsigned char, 4>, 4> cipher_key,
 	unsigned char a_rot_word[4],
 	int &count
 )
@@ -441,7 +443,7 @@ void write_to_file(unsigned char state[4][4], std::ofstream &outfile)
 }
 
 //Function to get user to enter cipher
-void cipher(unsigned char cipher_key[4][4])
+std::array<std::array<unsigned char, 4>, 4> cipher()
 {
 	//Used to split up each char in the key
 	int cipher_count = 0;
@@ -450,6 +452,8 @@ void cipher(unsigned char cipher_key[4][4])
                  "Less than 16 will result in blanks being used "
 			     "which will make the file easier to crack.\n\n"
 			     "Enter the key here: ";
+
+    std::array<std::array<unsigned char, 4>, 4> cipher_key;
 
     //Writes input to cipher
     std::string cipher;
@@ -476,6 +480,8 @@ void cipher(unsigned char cipher_key[4][4])
 			cipher_count++;
 		}
 	}
+
+	return cipher_key;
 }
 
 //Performs AES encryption on a state array
@@ -506,14 +512,12 @@ void encrypt_file(bool output_key)
 {
 	unsigned char state[4][4];
 
-	unsigned char cipher_key[4][4];
-
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
 
 	static int count = 0;
 
-	cipher(cipher_key);
+	auto cipher_key = cipher();
 
 	//Expands the entire round key
 	auto round_key = key_schedule(cipher_key, a_rot_word, count);
