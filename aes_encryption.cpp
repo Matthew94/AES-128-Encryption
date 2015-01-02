@@ -29,14 +29,14 @@ void write_to_array(
     std::array<std::array<unsigned char, 4>, 4> &state
 );
 
-void s_box_k(unsigned char state[4]);
+std::array<unsigned char, 4> s_box_k(std::array<unsigned char, 4> rot_word);
 
 void s_box(std::array<std::array<unsigned char, 4>, 4> &state);
 
-int rot_word(
+std::array<unsigned char, 4> rot_word(
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    unsigned char rot_word[4],
-    int count
+    std::array<unsigned char, 4> rot_word,
+    int i
 );
 
 void write_to_file(
@@ -230,10 +230,6 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
     std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
 {
-    int count = 0;
-
-    unsigned char a_rot_word[4];
-
     //Array to hold all permutations of the round key
 	std::array<std::array<unsigned char, 44>, 4> round_key;
 
@@ -249,6 +245,8 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 		}
 	}
 
+    std::array<unsigned char, 4> a_rot_word;
+
     // Loop goes through all columns of the round key
     // starts at 4 to ignore the cipher values
 	for(int i = 4; i < 44; i++)
@@ -256,11 +254,10 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 
 		if(i % 4 == 0)
 		{
-
-			count = rot_word(round_key, a_rot_word, count);
+			a_rot_word = rot_word(round_key, a_rot_word, i - 4);
 
             //Performs the s box on it
-			s_box_k(a_rot_word);
+			a_rot_word = s_box_k(a_rot_word);
 
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
@@ -290,8 +287,8 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 }
 
 //S Box function to be used with the round key expansion
-void s_box_k(
-    unsigned char a_rot_word[4]
+std::array<unsigned char, 4> s_box_k(
+    std::array<unsigned char, 4> a_rot_word
 )
 {
 	for(int i = 0; i < 4; i++)
@@ -305,6 +302,8 @@ void s_box_k(
         //The 2 isloated numbers are inserted into the s_boxs_box array and this is assigned to the state array
 		a_rot_word[i] = aes_const::S_BOX[n >> 4][t];
 	}
+
+	return a_rot_word;
 }
 
 //S box function to be used in the encryption loop
@@ -331,18 +330,18 @@ void s_box(
 }
 
 //Used in key expansion, rotates a column by 1 byte "upwards"
-int rot_word(
+std::array<unsigned char, 4> rot_word(
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    unsigned char rot_word[4],
-    int count
+    std::array<unsigned char, 4> rot_word,
+    int i
 )
 {
-	rot_word[0] = round_key[1][3+count];
-	rot_word[1] = round_key[2][3+count];
-	rot_word[2] = round_key[3][3+count];
-	rot_word[3] = round_key[0][3+count];
+	rot_word[0] = round_key[1][3 + i];
+	rot_word[1] = round_key[2][3 + i];
+	rot_word[2] = round_key[3][3 + i];
+	rot_word[3] = round_key[0][3 + i];
 
-	return count + 4;
+	return rot_word;
 }
 
 //XORs the round key with state
