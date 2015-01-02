@@ -50,7 +50,7 @@ void main_menu()
 
 void test()
 {
-	std::array<std::array<unsigned char, 4>, 4> cipher_key =
+	const std::array<std::array<unsigned char, 4>, 4> cipher_key =
 	{
         {
             {{0x2b, 0x28, 0xab, 0x09}},
