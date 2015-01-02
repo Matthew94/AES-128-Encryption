@@ -21,11 +21,9 @@ void add_round_key(unsigned char state[4][4],
 void write_to_array(std::ifstream &infile,
                     unsigned char state[4][4]);
 
-void s_box_k(unsigned char state[4],
-             const unsigned char s[16][16]);
+void s_box_k(unsigned char state[4]);
 
-void s_box(unsigned char state[4][4],
-           const unsigned char s[16][16]);
+void s_box(unsigned char state[4][4]);
 
 void rot_word(std::array<std::array<unsigned char, 44>, 4> &round_key,
               unsigned char rot_word[4],
@@ -41,7 +39,6 @@ void mix_columns(unsigned char state[4][4]);
 void cipher(unsigned char cipher_key[4][4]);
 
 void encrypt_state(int &count,
-                   const unsigned char s[16][16],
                    std::array<std::array<unsigned char, 44>, 4> &round_key,
                    unsigned char state[4][4]);
 
@@ -130,7 +127,7 @@ void test()
 	auto round_key = key_schedule(cipher_key, a_rot_word, count);
 
 	//Resets count for the next loop
-	encrypt_state(count, aes_const::S_BOX, round_key, state);
+	encrypt_state(count, round_key, state);
 
     print_test_array(state);
 }
@@ -247,7 +244,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 			rot_word(round_key, a_rot_word, count);
 
             //Performs the s box on it
-			s_box_k(a_rot_word, aes_const::S_BOX);
+			s_box_k(a_rot_word);
 
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
@@ -279,7 +276,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 }
 
 //S Box function to be used with the round key expansion
-void s_box_k(unsigned char a_rot_word[4], const unsigned char s[16][16])
+void s_box_k(unsigned char a_rot_word[4])
 {
 
 	for(int i = 0; i < 4; i++)
@@ -293,14 +290,13 @@ void s_box_k(unsigned char a_rot_word[4], const unsigned char s[16][16])
 		//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
 		n = n >> 4;
 
-        //The 2 isloated numbers are inserted into the s_box array and this is assigned to the state array
-		a_rot_word[i] = s[n][t];
+        //The 2 isloated numbers are inserted into the s_boxs_box array and this is assigned to the state array
+		a_rot_word[i] = aes_const::S_BOX[n][t];
 	}
 }
 
 //S box function to be used in the encryption loop
-void s_box(unsigned char state[4][4],
-           const unsigned char s[16][16])
+void s_box(unsigned char state[4][4])
 {
 	for(int i = 0; i < 4; i++)
 	{
@@ -315,7 +311,7 @@ void s_box(unsigned char state[4][4],
 			// n is bit shifted 4 places across
 			// This is to isolate the second digit from the character
 			// i.e the 1 from 15
-			state[i][j] = s[n >> 4][t];
+			state[i][j] = aes_const::S_BOX[n >> 4][t];
 		}
 	}
 }
@@ -464,7 +460,6 @@ void cipher(unsigned char cipher_key[4][4])
 
 //Performs AES encryption on a state array
 void encrypt_state(int &count,
-                   const unsigned char s[16][16],
 				   std::array<std::array<unsigned char, 44>, 4> &round_key,
                    unsigned char state[4][4])
 {
@@ -474,7 +469,7 @@ void encrypt_state(int &count,
         //Does 9 rounds of the encryption
 		for(int i = 0; i < 10; i++)
 		{
-			s_box(state, s);
+			s_box(state);
 			row_shift(state);
             if (i != 9)
             {
@@ -515,7 +510,7 @@ void encrypt_file(bool output_key)
 		write_to_array(infile, state);
 
 		//Resets count for the next loop
-		encrypt_state(count, aes_const::S_BOX, round_key, state);
+		encrypt_state(count, round_key, state);
 
 		//Outputs the final version of state to the file
 		write_to_file(state, outfile);
