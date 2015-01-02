@@ -61,7 +61,7 @@ void encrypt_state(
 
 void open_file(
     std::ifstream &infile,
-    std::ofstream &outfile,
+    std::ofstream &outfile
 );
 
 void print_test_array(
@@ -176,7 +176,7 @@ void print_test_array(
 
 void open_file(
     std::ifstream &infile,
-    std::ofstream &outfile,
+    std::ofstream &outfile
 )
 {
 	std::string file_name;
@@ -516,7 +516,7 @@ void encrypt_file()
 	std::ifstream infile;
 	std::ofstream outfile;
 
-	open_file(infile, outfile, cipher_key);
+	open_file(infile, outfile);
 
 	while(infile)
 	{
