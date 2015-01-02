@@ -151,7 +151,6 @@ void open_file(std::ifstream &infile,
 {
 	std::string file_name;
 	std::string key_name;
-	char character;
 
 	while(1)
 	{
