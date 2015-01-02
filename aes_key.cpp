@@ -54,7 +54,6 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 	return round_key;
 }
 
-//Used in key expansion, rotates a column by 1 byte "upwards"
 std::array<unsigned char, 4> rot_word(
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int i
@@ -72,20 +71,21 @@ std::array<unsigned char, 4> rot_word(
     return rot_word;
 }
 
-//S Box function to be used with the round key expansion
 std::array<unsigned char, 4> s_box_k(
     std::array<unsigned char, 4> a_rot_word
 )
 {
 	for(int i = 0; i < 4; i++)
 	{
-	    //Character to hold a character from the array
+	    // Character to hold a character from the array
 		unsigned char n = a_rot_word[i];
 
-        //n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
+        // n is AND'd with 15 in hex to isloate the first digit
+        // i.e the 5 from 15
 		unsigned char t = 0xF & n;
 
-        //The 2 isloated numbers are inserted into the s_boxs_box array and this is assigned to the state array
+        // The 2 isolated numbers are inserted into the s_boxs_box array
+        // This is assigned to the state array
 		a_rot_word[i] = aes_const::S_BOX[n >> 4][t];
 	}
 
