@@ -153,9 +153,7 @@ void open_file(std::ifstream &infile,
 	std::string key_name;
 	char character;
 
-	bool read_success = false;
-
-	while(read_success == false)
+	while(1)
 	{
 		std::cout << "\n\nEnter the name of a file to be read: ";
 		std::cin >> file_name;
@@ -167,7 +165,7 @@ void open_file(std::ifstream &infile,
 		if (infile.is_open())
 		{
 			std::cout << "\n***The file has been opened.***\n\n";
-			read_success = true;
+			break;
 		}
 		else
 		{
