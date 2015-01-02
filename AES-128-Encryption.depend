@@ -10,18 +10,18 @@
 
 1420206760 c:\users\matthew\documents\github\aes-128-encryption\constants.hpp
 
-1420207944 source:c:\users\matthew\documents\github\aes-128-encryption\aes_en.cpp
+1420208326 source:c:\users\matthew\documents\github\aes-128-encryption\aes_en.cpp
 	"aes_en.hpp"
 
-1420208120 c:\users\matthew\documents\github\aes-128-encryption\aes_en.hpp
+1420208791 c:\users\matthew\documents\github\aes-128-encryption\aes_en.hpp
 	<array>
 	<iostream>
 	<vector>
 	<algorithm>
-	"constants.hpp"
+	"aes_constants.hpp"
 	"aes_strings.hpp"
 
-1420207855 c:\users\matthew\documents\github\aes-128-encryption\aes_strings.hpp
+1420208326 c:\users\matthew\documents\github\aes-128-encryption\aes_strings.hpp
 	<string>
 
 1420206986 c:\users\matthew\documents\github\aes-128-encryption\file_functions.hpp
@@ -32,4 +32,15 @@
 
 1420207765 source:c:\users\matthew\documents\github\aes-128-encryption\file_functions.cpp
 	"file_functions.hpp"
+
+1420208701 source:c:\users\matthew\documents\github\aes-128-encryption\aes_file_functions.cpp
+	"aes_file_functions.hpp"
+
+1420208697 c:\users\matthew\documents\github\aes-128-encryption\aes_file_functions.hpp
+	<array>
+	<iostream>
+	<fstream>
+	<string>
+
+1420208326 c:\users\matthew\documents\github\aes-128-encryption\aes_constants.hpp
 

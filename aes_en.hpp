@@ -8,7 +8,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "constants.hpp"
+#include "aes_constants.hpp"
 #include "aes_strings.hpp"
 
 void encrypt_state(

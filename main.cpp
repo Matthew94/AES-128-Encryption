@@ -8,7 +8,7 @@ Made for my first year final C++ project. Now being fixed up.
 #include <fstream>
 #include <array>
 
-#include "constants.hpp"
+#include "aes_constants.hpp"
 #include "aes_strings.hpp"
 #include "aes_en.hpp"
 #include "aes_file_functions.hpp"
