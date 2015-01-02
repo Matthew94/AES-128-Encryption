@@ -56,7 +56,6 @@ void print_test_array(unsigned char state[4][4]);
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     unsigned char cipher_key[4][4],
 	unsigned char a_rot_word[4],
-	const unsigned char s[16][16],
 	int &count
 );
 
@@ -128,7 +127,7 @@ void test()
 	unsigned char a_rot_word[4];
 
     //Expands the entire round key
-	auto round_key = key_schedule(cipher_key, a_rot_word, aes_const::S_BOX, count);
+	auto round_key = key_schedule(cipher_key, a_rot_word, count);
 
 	//Resets count for the next loop
 	encrypt_state(count, aes_const::S_BOX, round_key, state);
@@ -219,7 +218,6 @@ void write_to_array(std::ifstream &infile, unsigned char state[4][4])
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     unsigned char cipher_key[4][4],
 	unsigned char a_rot_word[4],
-	const unsigned char s[16][16],
 	int &count
 )
 {
@@ -249,7 +247,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 			rot_word(round_key, a_rot_word, count);
 
             //Performs the s box on it
-			s_box_k(a_rot_word, s);
+			s_box_k(a_rot_word, aes_const::S_BOX);
 
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
@@ -374,6 +372,7 @@ void row_shift(unsigned char state[4][4])
         std::rotate(index.begin(), index.begin() + 1, index.end());
 	}
 }
+
 //Implements mix columns function
 void mix_columns(unsigned char state[4][4])
 {
@@ -502,7 +501,7 @@ void encrypt_file(bool output_key)
 	cipher(cipher_key);
 
 	//Expands the entire round key
-	auto round_key = key_schedule(cipher_key, a_rot_word, aes_const::S_BOX, count);
+	auto round_key = key_schedule(cipher_key, a_rot_word, count);
 
 	std::ifstream infile;
 	std::ofstream outfile;
