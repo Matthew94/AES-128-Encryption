@@ -6,9 +6,8 @@
 #include <string>
 #include <vector>
 
-void write_to_array(
-    std::ifstream &infile,
-    std::vector<std::vector<unsigned char>> &state
+std::vector<std::vector<unsigned char>> get_state_from_file(
+    std::ifstream &infile
 );
 
 void write_to_file(
@@ -16,9 +15,6 @@ void write_to_file(
     std::ofstream &outfile
 );
 
-void open_file(
-    std::ifstream &infile,
-    std::ofstream &outfile
-);
+void open_file(std::ifstream &infile, std::ofstream &outfile);
 
 #endif // _AES_FILE_FUNCTIONS_

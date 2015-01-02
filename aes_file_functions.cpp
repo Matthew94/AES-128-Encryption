@@ -1,11 +1,17 @@
 #include "aes_file_functions.hpp"
 
 //Reads 16 characters from text file, writes to state array
-void write_to_array(
-    std::ifstream &infile,
-    std::vector<std::vector<unsigned char>> &state
+std::vector<std::vector<unsigned char>> get_state_from_file(
+    std::ifstream &infile
 )
 {
+    std::vector<std::vector<unsigned char>> state {
+        {0x00, 0x00, 0x00, 0x00},
+        {0x00, 0x00, 0x00, 0x00},
+        {0x00, 0x00, 0x00, 0x00},
+        {0x00, 0x00, 0x00, 0x00},
+    };
+
 	for(int i = 0; i < 4; i++)
 	{
 		for(int j = 0; j < 4; j++)
@@ -13,6 +19,8 @@ void write_to_array(
 			state[j][i] = infile.get();
 		}
 	}
+
+	return state;
 }
 
 //Writes the state array to the output file
@@ -30,10 +38,7 @@ void write_to_file(
 	}
 }
 
-void open_file(
-    std::ifstream &infile,
-    std::ofstream &outfile
-)
+void open_file(std::ifstream &infile, std::ofstream &outfile)
 {
 	std::string file_name;
 	std::string key_name;
@@ -45,7 +50,7 @@ void open_file(
 
 		file_name = (file_name + ".txt");
 
-		infile.open(file_name.c_str());
+		infile.open(file_name);
 
 		if (infile.is_open())
 		{

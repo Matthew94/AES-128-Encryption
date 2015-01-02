@@ -102,13 +102,6 @@ void print_test_array(
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file()
 {
-    std::vector<std::vector<unsigned char>> state {
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-    };
-
     auto cipher_key = cipher();
 
     //Expands the entire round key
@@ -122,7 +115,7 @@ void encrypt_file()
     while(infile)
     {
         //Writes 16 characters to the state array
-        write_to_array(infile, state);
+        auto state = get_state_from_file(infile);
 
         //Resets count for the next loop
         encrypt_state(round_key, state);
