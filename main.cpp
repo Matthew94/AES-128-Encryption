@@ -12,6 +12,7 @@ Made for my first year final C++ project. Now being fixed up.
 #include "aes_strings.hpp"
 #include "aes_en.hpp"
 #include "aes_file_functions.hpp"
+#include "aes_key.hpp"
 
 void main_menu();
 

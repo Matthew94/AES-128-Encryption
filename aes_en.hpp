@@ -34,20 +34,6 @@ std::array<std::array<unsigned char, 4>, 4> mix_columns(
     std::array<std::array<unsigned char, 4>, 4> state
 );
 
-std::array<std::array<unsigned char, 44>, 4> key_schedule(
-    std::array<std::array<unsigned char, 4>, 4> cipher_key
-);
-
-std::array<unsigned char, 4> rot_word(
-    std::array<std::array<unsigned char, 44>, 4> round_key,
-    std::array<unsigned char, 4> rot_word,
-    int i
-);
-
-std::array<unsigned char, 4> s_box_k(
-    std::array<unsigned char, 4> rot_word
-);
-
 std::array<std::array<unsigned char, 4>, 4> cipher();
 
 #endif // _AES_ENCRYPTION_FUNCTIONS_
