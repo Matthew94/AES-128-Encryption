@@ -18,32 +18,32 @@ void test();
 
 void encrypt_file(bool output_key);
 
-int add_round_key(unsigned char state[4][4],
+int add_round_key(std::array<std::array<unsigned int, 4>, 4> &state,
                    std::array<std::array<unsigned char, 44>, 4> round_key,
                    int count);
 
 void write_to_array(std::ifstream &infile,
-                    unsigned char state[4][4]);
+                    std::array<std::array<unsigned int, 4>, 4> &state);
 
 void s_box_k(unsigned char state[4]);
 
-void s_box(unsigned char state[4][4]);
+void s_box(std::array<std::array<unsigned int, 4>, 4> &state);
 
 int rot_word(std::array<std::array<unsigned char, 44>, 4> round_key,
               unsigned char rot_word[4],
               int count);
 
-void write_to_file(unsigned char state[4][4],
+void write_to_file(std::array<std::array<unsigned int, 4>, 4> &state,
                    std::ofstream &outfile);
 
-void row_shift(unsigned char state[4][4]);
+void row_shift(std::array<std::array<unsigned int, 4>, 4> &state);
 
-void mix_columns(unsigned char state[4][4]);
+void mix_columns(std::array<std::array<unsigned int, 4>, 4> &state);
 
 std::array<std::array<unsigned char, 4>, 4> cipher();
 
 void encrypt_state(std::array<std::array<unsigned char, 44>, 4> &round_key,
-                   unsigned char state[4][4]);
+                   std::array<std::array<unsigned int, 4>, 4> &state);
 
 void open_file(std::ifstream &infile,
                std::ofstream &outfile,
@@ -51,7 +51,7 @@ void open_file(std::ifstream &infile,
                std::ofstream &outkey,
                std::array<std::array<unsigned char, 4>, 4> cipher_key);
 
-void print_test_array(unsigned char state[4][4]);
+void print_test_array(std::array<std::array<unsigned int, 4>, 4> &state);
 
 std::array<std::array<unsigned char, 44>, 4> key_schedule(
     std::array<std::array<unsigned char, 4>, 4> cipher_key,
@@ -131,11 +131,13 @@ void test()
         }
     };
 
-	unsigned char state[4][4] = {
-	    {0x32, 0x88, 0x31, 0xe0},
-		{0x43, 0x5a, 0x31, 0x37},
-		{0xf6, 0x30, 0x98, 0x07},
-		{0xa8, 0x8d, 0xa2, 0x34}
+	std::array<std::array<unsigned int, 4>, 4> state = {
+	    {
+            {0x32, 0x88, 0x31, 0xe0},
+            {0x43, 0x5a, 0x31, 0x37},
+            {0xf6, 0x30, 0x98, 0x07},
+            {0xa8, 0x8d, 0xa2, 0x34}
+	    }
     };
 
 	//Array to hold the rotated column used in the key schedule
@@ -150,7 +152,7 @@ void test()
     print_test_array(state);
 }
 
-void print_test_array(unsigned char state[4][4])
+void print_test_array(std::array<std::array<unsigned int, 4>, 4> &state)
 {
 	std::cout << "\nThe results are:\n";
 
@@ -218,7 +220,7 @@ void open_file(std::ifstream &infile,
 }
 
 //Reads 16 characters from text file, writes to state array
-void write_to_array(std::ifstream &infile, unsigned char state[4][4])
+void write_to_array(std::ifstream &infile, std::array<std::array<unsigned int, 4>, 4> &state)
 {
 	for(int i = 0; i < 4; i++)
 	{
@@ -309,7 +311,7 @@ void s_box_k(unsigned char a_rot_word[4])
 }
 
 //S box function to be used in the encryption loop
-void s_box(unsigned char state[4][4])
+void s_box(std::array<std::array<unsigned int, 4>, 4> &state)
 {
 	for(int i = 0; i < 4; i++)
 	{
@@ -343,7 +345,7 @@ int rot_word(std::array<std::array<unsigned char, 44>, 4> round_key,
 }
 
 //XORs the round key with state
-int add_round_key(unsigned char state[4][4],
+int add_round_key(std::array<std::array<unsigned int, 4>, 4> &state,
                    std::array<std::array<unsigned char, 44>, 4> round_key,
                    int count)
 {
@@ -360,7 +362,7 @@ int add_round_key(unsigned char state[4][4],
 }
 
 //Shifts the values of the state array
-void row_shift(unsigned char state[4][4])
+void row_shift(std::array<std::array<unsigned int, 4>, 4> &state)
 {
     std::vector<int> index = {1, 2, 3, 0};
 	unsigned char temp[4];
@@ -383,7 +385,7 @@ void row_shift(unsigned char state[4][4])
 }
 
 //Implements mix columns function
-void mix_columns(unsigned char state[4][4])
+void mix_columns(std::array<std::array<unsigned int, 4>, 4> &state)
 {
     //4x4 array for holding result of mix columns function
 	unsigned char output[4][4];
@@ -422,7 +424,7 @@ void mix_columns(unsigned char state[4][4])
 }
 
 //Writes the state array to the output file
-void write_to_file(unsigned char state[4][4], std::ofstream &outfile)
+void write_to_file(std::array<std::array<unsigned int, 4>, 4> &state, std::ofstream &outfile)
 {
 	for(int i = 0; i < 4; i++)
 	{
@@ -477,7 +479,7 @@ std::array<std::array<unsigned char, 4>, 4> cipher()
 
 //Performs AES encryption on a state array
 void encrypt_state(std::array<std::array<unsigned char, 44>, 4> &round_key,
-                   unsigned char state[4][4])
+                   std::array<std::array<unsigned int, 4>, 4> &state)
 {
         int count = 0;
 
@@ -500,7 +502,7 @@ void encrypt_state(std::array<std::array<unsigned char, 44>, 4> &round_key,
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file(bool output_key)
 {
-	unsigned char state[4][4];
+	std::array<std::array<unsigned int, 4>, 4> state;
 
 	//Array to hold the rotated column used in the key schedule
 	unsigned char a_rot_word[4];
