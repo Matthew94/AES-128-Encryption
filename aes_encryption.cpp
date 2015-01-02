@@ -16,7 +16,7 @@ void main_menu();
 
 void test();
 
-void encrypt_file(bool output_key);
+void encrypt_file();
 
 int add_round_key(
     std::array<std::array<unsigned char, 4>, 4> &state,
@@ -62,8 +62,6 @@ void encrypt_state(
 void open_file(
     std::ifstream &infile,
     std::ofstream &outfile,
-    bool output_key,
-    std::ofstream &outkey,
     std::array<std::array<unsigned char, 4>, 4> cipher_key
 );
 
@@ -79,9 +77,8 @@ void main_menu()
 {
 	std::cout << "\n***** AES 128 Bit Encryption Program *****\n\n"
                  "[1] Encrypt .txt file, no key output.\n"
-                 "[2] Encrypt .txt file, outputs key to .txt file.\n"
-                 "[3] Test Run.\n"
-                 "[4] Description of options.\n"
+                 "[2] Test Run.\n"
+                 "[3] Description of options.\n"
                  "[ANY OTHER KEY] Quit the program\n\n"
 			     "Enter your choice: ";
 
@@ -91,23 +88,18 @@ void main_menu()
 	switch(choice)
 	{
 		case 1:
-			encrypt_file(false);
+			encrypt_file();
 			break;
 		case 2:
-			encrypt_file(true);
-			break;
-		case 3:
 			test();
 			main_menu();
 			break;
-		case 4:
+		case 3:
 			std::cout << "\n[1]: Encodes a .txt file in 128 Bit AES.\n"
 					     "[1]: Enter the name of the input and output files.\n"
 					     "[1]: .txt extension is automatically added.\n\n"
 
-                         "[2]: Like [1] but key is also saved to a file.\n\n"
-
-                         "[3]: Test to ensure correct operation.\n\n"
+                         "[2]: Test to ensure correct operation.\n\n"
 
                          "State is:\t\tThe cipher key is:\t"
                          "The results should be:\n"
@@ -184,8 +176,6 @@ void print_test_array(
 void open_file(
     std::ifstream &infile,
     std::ofstream &outfile,
-    bool output_key,
-    std::ofstream &outkey,
     std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
 {
@@ -215,25 +205,9 @@ void open_file(
 	std::cout << "Enter the name of a file to be written to (if it already exists it will be overwritten): ";
 	std::cin >> file_name;
 
-	key_name = file_name + "_key.txt";
 	file_name += ".txt";
 
 	outfile.open(file_name);
-
-	if(output_key == true)
-	{
-		outkey.open(key_name);
-
-		for(int i = 0; i < 4; i++)
-		{
-			for(int j = 0; j < 4; j++)
-			{
-				outkey << cipher_key[j][i];
-			}
-		}
-
-		std::cout << "\nThe key has been written to a file. (KEEP IT HIDDEN)\n";
-	}
 }
 
 //Reads 16 characters from text file, writes to state array
@@ -530,9 +504,7 @@ void encrypt_state(
 }
 
 //Performs AES 128 Bit Encryption on a file
-void encrypt_file(
-    bool output_key
-)
+void encrypt_file()
 {
 	std::array<std::array<unsigned char, 4>, 4> state;
 
@@ -543,9 +515,8 @@ void encrypt_file(
 
 	std::ifstream infile;
 	std::ofstream outfile;
-	std::ofstream outkey;
 
-	open_file(infile, outfile, output_key, outkey, cipher_key);
+	open_file(infile, outfile, cipher_key);
 
 	while(infile)
 	{
