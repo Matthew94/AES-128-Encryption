@@ -1,4 +1,8 @@
-// Program refactor
+/*
+AES 128 Bit Encryption Program.
+
+Made for my first year final C++ project. Now being fixed up.
+*/
 
 #include <iostream>
 #include <fstream>
