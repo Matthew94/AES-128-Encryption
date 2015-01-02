@@ -75,7 +75,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 void main_menu()
 {
 	std::cout << "\n***** AES 128 Bit Encryption Program *****\n\n"
-                 "[1] Encrypt .txt file, no key output.\n"
+                 "[1] Encrypt .txt file.\n"
                  "[2] Test Run.\n"
                  "[3] Description of options.\n"
                  "[ANY OTHER KEY] Quit the program\n\n"
