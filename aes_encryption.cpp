@@ -309,11 +309,8 @@ void s_box_k(unsigned char a_rot_word[4])
         //n is AND'd with 15 in hex to isloate the first digit, i.e the 5 from 15
 		unsigned char t = 0xF & n;
 
-		//n is bit shifted 4 places accross to isolate the second digit from the character, i.e the 1 from 15
-		n = n >> 4;
-
         //The 2 isloated numbers are inserted into the s_boxs_box array and this is assigned to the state array
-		a_rot_word[i] = aes_const::S_BOX[n][t];
+		a_rot_word[i] = aes_const::S_BOX[n >> 4][t];
 	}
 }
 
