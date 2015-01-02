@@ -18,7 +18,9 @@ Made for my first year final C++ project. Now being fixed up.
 
 void main_menu();
 
-void test();
+void test_encryption();
+
+void test_cipher();
 
 void encrypt_file();
 
@@ -39,10 +41,14 @@ void main_menu()
             encrypt_file();
             break;
         case 2:
-            test();
+            test_encryption();
             main_menu();
             break;
         case 3:
+            test_cipher();
+            main_menu();
+            break;
+        case 4:
             std::cout << aes_const::INFO;
             main_menu();
             break;
@@ -51,7 +57,7 @@ void main_menu()
     }
 }
 
-void test()
+void test_encryption()
 {
     const std::array<std::array<unsigned char, 4>, 4> cipher_key =
     {
@@ -79,6 +85,11 @@ void test()
     encrypt_state(round_key, state);
 
     print_test_array(state);
+}
+
+void test_cipher()
+{
+    1+1;
 }
 
 void print_test_array(
