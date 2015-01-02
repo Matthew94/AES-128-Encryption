@@ -48,8 +48,8 @@ void row_shift(
     std::array<std::array<unsigned char, 4>, 4> &state
 );
 
-void mix_columns(
-    std::array<std::array<unsigned char, 4>, 4> &state
+std::array<std::array<unsigned char, 4>, 4> mix_columns(
+    std::array<std::array<unsigned char, 4>, 4> state
 );
 
 std::array<std::array<unsigned char, 4>, 4> cipher();
@@ -420,12 +420,12 @@ void row_shift(
 }
 
 //Implements mix columns function
-void mix_columns(
-    std::array<std::array<unsigned char, 4>, 4> &state
+std::array<std::array<unsigned char, 4>, 4> mix_columns(
+    std::array<std::array<unsigned char, 4>, 4> state
 )
 {
     //4x4 array for holding result of mix columns function
-	unsigned char output[4][4];
+	std::array<std::array<unsigned char, 4>, 4> output;
 
     // Loops through 4 values of the state array
     // the 4 numbers are XOD'd after the matrix multiplication is done
@@ -449,15 +449,7 @@ void mix_columns(
 		output[3][i] = ( (aes_const::TABLE_3[static_cast<int>(state[0][i])]) ^ state[1][i] ^ state[2][i] ^ (aes_const::TABLE_2[static_cast<int>(state[3][i])]) );
 	}
 
-    //Copies output array on to the state array
-	for(int i = 0; i < 4; i++)
-	{
-		for(int j = 0; j < 4; j++)
-		{
-			state[i][j] = output[i][j];
-		}
-	}
-
+    return output;
 }
 
 //Writes the state array to the output file
@@ -535,7 +527,7 @@ void encrypt_state(
 			row_shift(state);
             if (i != 9)
             {
-                mix_columns(state);
+                state = mix_columns(state);
             }
 			count = add_round_key(state, round_key, count);
 		}
