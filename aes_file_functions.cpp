@@ -1,4 +1,4 @@
-#include "file_functions.hpp"
+#include "aes_file_functions.hpp"
 
 //Reads 16 characters from text file, writes to state array
 void write_to_array(

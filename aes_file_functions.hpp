@@ -1,5 +1,5 @@
-#ifndef _AES_FUNCTIONS_
-#define _AES_FUNCTIONS_
+#ifndef _AES_FILE_FUNCTIONS_
+#define _AES_FILE_FUNCTIONS_
 
 #include <array>
 #include <iostream>
@@ -21,4 +21,4 @@ void open_file(
     std::ofstream &outfile
 );
 
-#endif // _AES_FUNCTIONS_
+#endif // _AES_FILE_FUNCTIONS_
