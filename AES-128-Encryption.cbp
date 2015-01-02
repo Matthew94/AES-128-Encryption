@@ -32,8 +32,17 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="aes_encryption.cpp" />
-		<Unit filename="constants.hpp" />
+		<Unit filename="aes_cipher.cpp" />
+		<Unit filename="aes_cipher.hpp" />
+		<Unit filename="aes_constants.hpp" />
+		<Unit filename="aes_en.cpp" />
+		<Unit filename="aes_en.hpp" />
+		<Unit filename="aes_file_functions.cpp" />
+		<Unit filename="aes_file_functions.hpp" />
+		<Unit filename="aes_key.cpp" />
+		<Unit filename="aes_key.hpp" />
+		<Unit filename="aes_strings.hpp" />
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
