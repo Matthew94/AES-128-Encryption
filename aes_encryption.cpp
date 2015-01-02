@@ -183,7 +183,7 @@ void open_file(std::ifstream &infile,
 
 	if(output_key == true)
 	{
-		outkey.open(key_name.c_str());
+		outkey.open(key_name);
 
 		for(int i = 0; i < 4; i++)
 		{
