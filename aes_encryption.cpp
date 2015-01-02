@@ -62,7 +62,6 @@ void encrypt_state(
 void open_file(
     std::ifstream &infile,
     std::ofstream &outfile,
-    std::array<std::array<unsigned char, 4>, 4> cipher_key
 );
 
 void print_test_array(
@@ -131,8 +130,9 @@ void main_menu()
 
 void test()
 {
-	std::array<std::array<unsigned char, 4>, 4> cipher_key = {
-	    {
+	std::array<std::array<unsigned char, 4>, 4> cipher_key =
+	{
+        {
             {0x2b, 0x28, 0xab, 0x09},
             {0x7e, 0xae, 0xf7, 0xcf},
             {0x15, 0xd2, 0x15, 0x4f},
@@ -140,7 +140,8 @@ void test()
         }
     };
 
-	std::array<std::array<unsigned char, 4>, 4> state = {
+	std::array<std::array<unsigned char, 4>, 4> state =
+	{
 	    {
             {0x32, 0x88, 0x31, 0xe0},
             {0x43, 0x5a, 0x31, 0x37},
@@ -176,7 +177,6 @@ void print_test_array(
 void open_file(
     std::ifstream &infile,
     std::ofstream &outfile,
-    std::array<std::array<unsigned char, 4>, 4> cipher_key
 )
 {
 	std::string file_name;
