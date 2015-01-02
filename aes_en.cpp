@@ -15,7 +15,7 @@ void encrypt_state(
         //Does 9 rounds of the encryption
 		for(int i = 0; i < 10; i++)
 		{
-			state = s_box(state);
+			state = sub_bytes(state);
 			shift_rows(state);
             if (i != 9)
             {
@@ -45,7 +45,7 @@ int add_round_key(
 }
 
 //S box function to be used in the encryption loop
-std::array<std::array<unsigned char, 4>, 4> s_box(
+std::array<std::array<unsigned char, 4>, 4> sub_bytes(
     std::array<std::array<unsigned char, 4>, 4> state
 )
 {

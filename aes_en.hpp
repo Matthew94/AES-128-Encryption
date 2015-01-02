@@ -22,7 +22,7 @@ int add_round_key(
     int count
 );
 
-std::array<std::array<unsigned char, 4>, 4> s_box(
+std::array<std::array<unsigned char, 4>, 4> sub_bytes(
     std::array<std::array<unsigned char, 4>, 4> state
 );
 
