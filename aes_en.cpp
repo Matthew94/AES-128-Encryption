@@ -7,18 +7,18 @@ void encrypt_state(
     std::vector<std::vector<unsigned char>> &state
 )
 {
-		auto count = add_round_key(state, round_key);
+		auto round_key_index = add_round_key(state, round_key);
 
         //Does 10 rounds of the encryption
 		for(int i = 0; i < 10; i++)
 		{
 			state = sub_bytes(state);
 			state = shift_rows(state);
+
             if (i != 9)
-            {
                 state = mix_columns(state);
-            }
-			count = add_round_key(state, round_key, count);
+
+			round_key_index = add_round_key(state, round_key, round_key_index);
 		}
 }
 
