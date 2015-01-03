@@ -43,6 +43,8 @@
 		<Unit filename="aes_key.hpp" />
 		<Unit filename="aes_strings.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="test.cpp" />
+		<Unit filename="test.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
