@@ -22,17 +22,8 @@ std::array<std::array<unsigned char, 4>, 4> get_cipher_array(
         {
             const unsigned int CIPHER_INDEX = (i * 4) + j;
 
-            //Checks if the key is less than 16 characters
-            if(cipher_input.length() <= CIPHER_INDEX)
-            {
-                // Pads with blank characters
-                cipher_key[j][i] = ' ';
-            }
-            else
-            {
-                //Reads char from input, writes to cipher_key array
-                cipher_key[j][i] = cipher_input.at(CIPHER_INDEX);
-            }
+            //Reads char from input, writes to cipher_key array
+            cipher_key[j][i] = cipher_input.at(CIPHER_INDEX);
         }
     }
 
