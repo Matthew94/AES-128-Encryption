@@ -19,7 +19,7 @@ void encrypt_state(
 int add_round_key(
     std::vector<std::vector<unsigned char>> &state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    int count
+    int index = 0
 );
 
 std::vector<std::vector<unsigned char>> sub_bytes(

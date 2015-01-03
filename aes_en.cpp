@@ -7,12 +7,9 @@ void encrypt_state(
     std::vector<std::vector<unsigned char>> &state
 )
 {
-        int count = 0;
+		auto count = add_round_key(state, round_key);
 
-        //Adds the round key to state
-		count = add_round_key(state, round_key, count);
-
-        //Does 9 rounds of the encryption
+        //Does 10 rounds of the encryption
 		for(int i = 0; i < 10; i++)
 		{
 			state = sub_bytes(state);
@@ -29,19 +26,17 @@ void encrypt_state(
 int add_round_key(
     std::vector<std::vector<unsigned char>> &state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    int count
+    int index
 )
 {
-	for(int i = 0; i < 4; i++)
-	{
-		for(int j = 0; j < 4; j++)
-		{
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
 		    //XORs state with the currently used part of the round key
-			state[i][j] = (state[i][j] ^ round_key[i][j + count]);
+			state[i][j] = state[i][j] ^ round_key[i][j + index];
 		}
 	}
 
-	return count + 4;
+	return index + 4;
 }
 
 //S box function to be used in the encryption loop
@@ -49,11 +44,8 @@ std::vector<std::vector<unsigned char>> sub_bytes(
     std::vector<std::vector<unsigned char>> state
 )
 {
-	for(int i = 0; i < 4; i++)
-	{
-		for(int j = 0; j < 4; j++)
-		{
-		    //Character to hold a character from the array
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 4; j++){
 			const unsigned char n = state[i][j];
 
             //n is AND'd with 15 in hex to isolate the first digit
