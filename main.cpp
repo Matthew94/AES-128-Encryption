@@ -24,10 +24,6 @@ void test_cipher();
 
 void encrypt_file();
 
-void print_en_test_array(
-    std::vector<std::vector<unsigned char>> &state
-);
-
 void main_menu()
 {
     std::cout << aes_const::MENU;
@@ -42,13 +38,10 @@ void main_menu()
             break;
         case 2:
             test_encryption();
-            main_menu();
-            break;
-        case 3:
             test_cipher();
             main_menu();
             break;
-        case 4:
+        case 3:
             std::cout << aes_const::INFO;
             main_menu();
             break;
@@ -69,11 +62,22 @@ void test_encryption()
     };
     //Expands the entire round key
     auto round_key = key_schedule(aes_const::CIPHER_KEY);
-
     //Resets count for the next loop
     encrypt_state(round_key, state);
 
-    print_en_test_array(state);
+    auto is_same = true;
+
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            if(state[i][j] != aes_const::CORRECT_ENCRYPT_STATE_OUTPUT[i][j])
+                is_same = false;
+        }
+    }
+    if(is_same)
+        std::cout << "State test passed.\n";
+    else
+        std::cout << "State test failed.\n";
+
 }
 
 void test_cipher()
@@ -84,30 +88,14 @@ void test_cipher()
 
     for(int i = 0; i < 4; i++){
         for(int j = 0; j < 44; j++){
-            if(round_key[i][j] != aes_const::KEYGEN_OUT[i][j])
+            if(round_key[i][j] != aes_const::CORRECT_KEYGEN_OUTPUT[i][j])
                 is_same = false;
         }
     }
     if(is_same)
-        std::cout << "Test passed.\n";
+        std::cout << "Keygen test passed.\n";
     else
-        std::cout << "Test failed.\n";
-}
-
-void print_en_test_array(
-    std::vector<std::vector<unsigned char>> &state
-)
-{
-    std::cout << "\nThe results are:\n";
-
-    for(int i = 0; i < 4; i++)
-    {
-        for(int j = 0; j < 4; j++)
-        {
-            std::cout << std::hex << static_cast<int>(state[i][j]) << "\t";
-        }
-        std::cout << "\n";
-    }
+        std::cout << "Keygen test failed.\n";
 }
 
 //Performs AES 128 Bit Encryption on a file
