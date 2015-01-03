@@ -10,10 +10,9 @@ void test_encryption()
             {{0xa8, 0x8d, 0xa2, 0x34}}
         }
     };
-    //Expands the entire round key
-    auto round_key = key_schedule(aes_const::CIPHER_KEY);
+
     //Resets count for the next loop
-    encrypt_state(round_key, state);
+    state = encrypt_state(key_schedule(aes_const::CIPHER_KEY), state);
 
     auto is_same = true;
 

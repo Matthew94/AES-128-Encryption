@@ -66,7 +66,7 @@ void encrypt_file()
         auto state = get_state_from_file(infile);
 
         //Resets count for the next loop
-        encrypt_state(round_key, state);
+        state = encrypt_state(round_key, state);
 
         //Outputs the final version of state to the file
         write_to_file(state, outfile);
