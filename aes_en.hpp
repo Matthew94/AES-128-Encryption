@@ -26,8 +26,8 @@ std::vector<std::vector<unsigned char>> sub_bytes(
     std::vector<std::vector<unsigned char>> state
 );
 
-void shift_rows(
-    std::vector<std::vector<unsigned char>> &state
+std::vector<std::vector<unsigned char>> shift_rows(
+    std::vector<std::vector<unsigned char>> state
 );
 
 std::vector<std::vector<unsigned char>> mix_columns(

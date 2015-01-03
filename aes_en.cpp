@@ -16,7 +16,7 @@ void encrypt_state(
 		for(int i = 0; i < 10; i++)
 		{
 			state = sub_bytes(state);
-			shift_rows(state);
+			state = shift_rows(state);
             if (i != 9)
             {
                 state = mix_columns(state);
@@ -66,8 +66,8 @@ std::vector<std::vector<unsigned char>> sub_bytes(
 }
 
 //Shifts the values of the state array
-void shift_rows(
-    std::vector<std::vector<unsigned char>> &state
+std::vector<std::vector<unsigned char>> shift_rows(
+    std::vector<std::vector<unsigned char>> state
 )
 {
     //Copy a template of a row into an array
@@ -75,6 +75,8 @@ void shift_rows(
 	{
         std::rotate(state[i].begin(), state[i].begin() + i, state[i].end());
 	}
+
+	return state;
 }
 
 //Implements mix columns function
