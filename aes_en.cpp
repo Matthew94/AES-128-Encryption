@@ -72,9 +72,7 @@ std::vector<std::vector<unsigned char>> shift_rows(
 {
     //Copy a template of a row into an array
 	for(int i = 0; i < 4; i++)
-	{
         std::rotate(state[i].begin(), state[i].begin() + i, state[i].end());
-	}
 
 	return state;
 }
