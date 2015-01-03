@@ -5,16 +5,14 @@ std::vector<std::vector<unsigned char>> get_state_from_file(
     std::ifstream &infile
 )
 {
-    std::vector<std::vector<unsigned char>> state {
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-        {0x00, 0x00, 0x00, 0x00},
-    };
+    std::vector<std::vector<unsigned char>> state;
 
 	for(int i = 0; i < 4; i++){
+	    std::vector<unsigned char> sub_vector;
+        state.push_back(sub_vector);
+
 		for(int j = 0; j < 4; j++){
-			state[j][i] = infile.get();
+			state[j].push_back(infile.get());
 		}
 	}
 
