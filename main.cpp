@@ -101,7 +101,7 @@ void test_cipher()
 //Performs AES 128 Bit Encryption on a file
 void encrypt_file()
 {
-    const auto cipher_key = get_cipher_key();
+    const auto cipher_key = get_cipher_from_user();
 
     //Expands the entire round key
     auto round_key = key_schedule(cipher_key);
