@@ -2,6 +2,7 @@
 #define _AES_CONSTANTS_
 
 #include <vector>
+#include <array>
 
 namespace aes_const{
 
