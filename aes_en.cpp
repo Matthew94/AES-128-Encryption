@@ -92,23 +92,36 @@ std::vector<std::vector<unsigned char>> mix_columns(
 	    {0x00, 0x00, 0x00, 0x00},
 	};
 
-    // Loops through 4 values of the state array
-    // the 4 numbers are XOD'd after the matrix multiplication is done
-    // 2 3 11
+    // Loops through each column of vector
+    // Uses Rijndael mix columns look up tables
+    // Then XORS all values together
 	for(int i = 0; i < 4; i++)
-		output[0][i] = aes_const::TABLE_2[state[0][i]] ^ aes_const::TABLE_3[state[1][i]] ^ state[2][i] ^ state[3][i];
+		output[0][i] =
+            aes_const::TABLE_2[state[0][i]] ^
+            aes_const::TABLE_3[state[1][i]] ^
+            state[2][i] ^
+            state[3][i];
 
-    // 1 2 3
 	for(int i = 0; i < 4; i++)
-		output[1][i] = state[0][i] ^ aes_const::TABLE_2[state[1][i]] ^ aes_const::TABLE_3[state[2][i]] ^ state[3][i];
+		output[1][i] =
+            state[0][i] ^
+            aes_const::TABLE_2[state[1][i]] ^
+            aes_const::TABLE_3[state[2][i]] ^
+            state[3][i];
 
-    // 1 1 2 3
 	for(int i = 0; i < 4; i++)
-		output[2][i] = state[0][i] ^ state[1][i] ^ aes_const::TABLE_2[state[2][i]] ^ aes_const::TABLE_3[state[3][i]];
+		output[2][i] =
+            state[0][i] ^
+            state[1][i] ^
+            aes_const::TABLE_2[state[2][i]] ^
+            aes_const::TABLE_3[state[3][i]];
 
-    // 3 1 1 2
 	for(int i = 0; i < 4; i++)
-		output[3][i] = aes_const::TABLE_3[state[0][i]] ^ state[1][i] ^ state[2][i] ^ aes_const::TABLE_2[state[3][i]];
+		output[3][i] =
+            aes_const::TABLE_3[state[0][i]] ^
+            state[1][i] ^
+            state[2][i] ^
+            aes_const::TABLE_2[state[3][i]];
 
     return output;
 }
