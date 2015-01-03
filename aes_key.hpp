@@ -15,7 +15,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 /*
 Used in key expansion, rotates a column by 1 byte "upwards"
 */
-std::array<unsigned char, 4> rot_word(
+std::array<unsigned char, 4> rotate_key(
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int i
 );

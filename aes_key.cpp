@@ -19,32 +19,26 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
 
     // Loop goes through all columns of the round key
     // starts at 4 to ignore the cipher values
-    for(int i = 4; i < 44; i++)
-    {
-        if(i % 4 == 0)
-        {
-            auto a_rot_word = rot_word(round_key, i - 4);
+    for(int i = 4; i < 44; i++){
+        if(i % 4 == 0){
+            auto rotated_round_key_column = rotate_key(round_key, i - 4);
 
             //Performs the s box on it
-            a_rot_word = sub_bytes_k(a_rot_word);
+            rotated_round_key_column = sub_bytes_k(rotated_round_key_column);
 
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
-            for(int j = 0; j < 4; j++)
-            {
-                temp[j] = (round_key[j][i - 4] ^ a_rot_word[j] ^ aes_const::R_CON[j][(i / 4) - 1]);
+            for(int j = 0; j < 4; j++){
+                temp[j] = (round_key[j][i - 4] ^ rotated_round_key_column[j] ^ aes_const::R_CON[j][(i / 4) - 1]);
             }
 
             //Assigns the XOR'd column to the round key
-            for(int j = 0; j < 4; j++)
-            {
+            for(int j = 0; j < 4; j++){
                 round_key[j][i] = temp[j];
             }
         }
-        else
-        {
-            for(int j = 0; j < 4; j++)
-            {
+        else{
+            for(int j = 0; j < 4; j++){
                 //XORs the round key 4 places back with the round key from 1 place back
                 round_key[j][i] = round_key[j][i - 4] ^ round_key[j][i - 1];
             }
@@ -54,7 +48,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
     return round_key;
 }
 
-std::array<unsigned char, 4> rot_word(
+std::array<unsigned char, 4> rotate_key(
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int i
 )
@@ -72,19 +66,19 @@ std::array<unsigned char, 4> rot_word(
 }
 
 std::array<unsigned char, 4> sub_bytes_k(
-    std::array<unsigned char, 4> a_rot_word
+    std::array<unsigned char, 4> rotated_round_key_column
 )
 {
     for(int i = 0; i < 4; i++)
     {
         //Character to hold a character from the array
-        const unsigned char n = a_rot_word[i];
+        const unsigned char n = rotated_round_key_column[i];
 
         //n is AND'd with 15 in hex to isolate the first digit
         // n is bit shifted 4 places across to get the second digit
-        a_rot_word[i] = aes_const::S_BOX[n >> 4][n & 0xF];
+        rotated_round_key_column[i] = aes_const::S_BOX[n >> 4][n & 0xF];
     }
 
-    return a_rot_word;
+    return rotated_round_key_column;
 }
 
