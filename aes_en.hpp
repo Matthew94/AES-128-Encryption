@@ -16,10 +16,10 @@ void encrypt_state(
     std::vector<std::vector<unsigned char>> &state
 );
 
-int add_round_key(
-    std::vector<std::vector<unsigned char>> &state,
+std::vector<std::vector<unsigned char>> add_round_key(
+    std::vector<std::vector<unsigned char>> state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
-    int index = 0
+    int index
 );
 
 std::vector<std::vector<unsigned char>> sub_bytes(

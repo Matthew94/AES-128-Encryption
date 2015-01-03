@@ -7,24 +7,24 @@ void encrypt_state(
     std::vector<std::vector<unsigned char>> &state
 )
 {
-		auto round_key_index = add_round_key(state, round_key);
-
         //Does 10 rounds of the encryption
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 11; i++)
 		{
-			state = sub_bytes(state);
-			state = shift_rows(state);
+            if(i > 0){
+                state = sub_bytes(state);
+                state = shift_rows(state);
+            }
 
-            if (i != 9)
+            if (i != 10 && i > 0)
                 state = mix_columns(state);
 
-			round_key_index = add_round_key(state, round_key, round_key_index);
+            state = add_round_key(state, round_key, i * 4);
 		}
 }
 
 //XORs the round key with state
-int add_round_key(
-    std::vector<std::vector<unsigned char>> &state,
+std::vector<std::vector<unsigned char>> add_round_key(
+    std::vector<std::vector<unsigned char>> state,
     std::array<std::array<unsigned char, 44>, 4> round_key,
     int index
 )
@@ -36,7 +36,7 @@ int add_round_key(
 		}
 	}
 
-	return index + 4;
+	return state;
 }
 
 //S box function to be used in the encryption loop
