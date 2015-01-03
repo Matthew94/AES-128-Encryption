@@ -96,19 +96,19 @@ std::vector<std::vector<unsigned char>> mix_columns(
     // the 4 numbers are XOD'd after the matrix multiplication is done
     // 2 3 11
 	for(int i = 0; i < 4; i++)
-		output[0][i] = aes_const::TABLE_2[static_cast<int>(state[0][i])] ^ aes_const::TABLE_3[static_cast<int>(state[1][i])] ^ state[2][i] ^ state[3][i];
+		output[0][i] = aes_const::TABLE_2[state[0][i]] ^ aes_const::TABLE_3[state[1][i]] ^ state[2][i] ^ state[3][i];
 
     // 1 2 3
 	for(int i = 0; i < 4; i++)
-		output[1][i] = state[0][i] ^ (aes_const::TABLE_2[static_cast<int>(state[1][i])]) ^ (aes_const::TABLE_3[static_cast<int>(state[2][i])]) ^ state[3][i];
+		output[1][i] = state[0][i] ^ aes_const::TABLE_2[state[1][i]] ^ aes_const::TABLE_3[state[2][i]] ^ state[3][i];
 
     // 1 1 2 3
 	for(int i = 0; i < 4; i++)
-		output[2][i] = state[0][i] ^ state[1][i] ^ aes_const::TABLE_2[static_cast<int>(state[2][i])] ^ aes_const::TABLE_3[static_cast<int>(state[3][i])];
+		output[2][i] = state[0][i] ^ state[1][i] ^ aes_const::TABLE_2[state[2][i]] ^ aes_const::TABLE_3[state[3][i]];
 
     // 3 1 1 2
 	for(int i = 0; i < 4; i++)
-		output[3][i] = aes_const::TABLE_3[static_cast<int>(state[0][i])] ^ state[1][i] ^ state[2][i] ^ aes_const::TABLE_2[static_cast<int>(state[3][i])];
+		output[3][i] = aes_const::TABLE_3[state[0][i]] ^ state[1][i] ^ state[2][i] ^ aes_const::TABLE_2[state[3][i]];
 
     return output;
 }
