@@ -29,7 +29,10 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
             //XORs rotated column with column 4 places
             //before in round key with part of the r_con
             for(int j = 0; j < 4; j++){
-                temp[j] = (round_key[j][i - 4] ^ rotated_round_key_column[j] ^ aes_const::R_CON[j][(i / 4) - 1]);
+                temp[j] =
+                    round_key[j][i - 4] ^
+                    rotated_round_key_column[j] ^
+                    aes_const::R_CON[j][(i / 4) - 1];
             }
 
             //Assigns the XOR'd column to the round key
@@ -39,7 +42,7 @@ std::array<std::array<unsigned char, 44>, 4> key_schedule(
         }
         else{
             for(int j = 0; j < 4; j++){
-                //XORs the round key 4 places back with the round key from 1 place back
+                //XOR round key 4 places back with round key from 1 place back
                 round_key[j][i] = round_key[j][i - 4] ^ round_key[j][i - 1];
             }
         }
@@ -71,7 +74,6 @@ std::array<unsigned char, 4> sub_bytes_k(
 {
     for(int i = 0; i < 4; i++)
     {
-        //Character to hold a character from the array
         const unsigned char n = rotated_round_key_column[i];
 
         //n is AND'd with 15 in hex to isolate the first digit
