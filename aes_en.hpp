@@ -12,7 +12,7 @@
 #include "aes_strings.hpp"
 
 void encrypt_state(
-    std::array<std::array<unsigned char, 44>, 4> &round_key,
+    std::array<std::array<unsigned char, 44>, 4> round_key,
     std::vector<std::vector<unsigned char>> &state
 );
 
